@@ -90,11 +90,11 @@
                      </HBox.margin></Button>
                   <Button mnemonicParsing="false" onAction="#loadDataClicked" text="Load data" />
                   <Button mnemonicParsing="false" onAction="#calculatePathClicked" text="Calculate path " />
-                  <RadioButton fx:id="auto" mnemonicParsing="false" onAction="#RadioButtonClicked" text="Autopilot">
+                  <RadioButton fx:id="auto" mnemonicParsing="false" onAction="#radioButtonClicked" text="Autopilot">
                      <padding>
                         <Insets left="250.0" />
                      </padding></RadioButton>
-                  <RadioButton fx:id="manual" mnemonicParsing="false" onAction="#RadioButtonClicked" text="Manual" />
+                  <RadioButton fx:id="manual" mnemonicParsing="false" onAction="#radioButtonClicked" text="Manual" />
                </children>
                <VBox.margin>
                   <Insets left="10.0" top="10.0" />

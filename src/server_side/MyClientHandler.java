@@ -47,13 +47,13 @@ public class MyClientHandler implements ClientHandler { //Client Handler that ha
 			input.add(userInput.readLine());
 			input.add(userInput.readLine());
 			
-			// String answer;
-//			if((answer = cm.getSolution(input)) == null) {
-//				cm.saveSolution(input, solver.solve(input));
-//				answer = cm.getSolution(input);
-//			}
+			String answer;
+			if((answer = cm.getSolution(input)) == null) {
+				cm.saveSolution(input, solver.solve(input));
+				answer = cm.getSolution(input);
+			}
 	
-			outToUser.println(solver.solve(input));
+			outToUser.println(answer);
 			outToUser.flush();
 		} catch (IOException e1) { e1.printStackTrace(); }
 		try {

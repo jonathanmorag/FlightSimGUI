@@ -61,6 +61,8 @@ public class MainWindowController extends Window implements Initializable {
 	boolean manualFlag;
 	boolean autoFlag;
 	Matrix matrix;
+	static String solverIP;
+	static int solverPort;
 	
 	public void connectClicked() {
 		String[] ip = new String[1];
@@ -104,7 +106,7 @@ public class MainWindowController extends Window implements Initializable {
 				Position start = new Position(Integer.parseInt(result[0]), Integer.parseInt(result[1]));
 				// int cellSize = Integer.parseInt(result[2]);
 				String[] heights = Arrays.copyOfRange(result, 3, result.length);
-				matrix = BuildMatrix(heights, start);
+				matrix = buildMatrix(heights, start);
 				mapDrawer.setHeightData(matrix); // painting
 				for (int i = 0; i < 7; i++) {
 					mapDrawer.setAirplanePosition(i, i);
@@ -114,7 +116,7 @@ public class MainWindowController extends Window implements Initializable {
 		}
 	}
 
-	public Matrix BuildMatrix(String[] dataFromCsv, Position start/* ,int[] cellsize? */) {
+	public Matrix buildMatrix(String[] dataFromCsv, Position start/* ,int[] cellsize? */) {
 		int size = (int) Math.sqrt(dataFromCsv.length);
 		int[][] mat = new int[size][size];
 		int c = 0;
@@ -135,8 +137,6 @@ public class MainWindowController extends Window implements Initializable {
 	}
 
 	public void calculatePathClicked() {
-		String[]ip = new String[1];
-		int[] port = new int[1];
 		Stage commentWindow = new Stage();
 		VBox box = new VBox(20);
 		Label ipCommentlabel = new Label("Enter ip of a solver server");
@@ -147,9 +147,9 @@ public class MainWindowController extends Window implements Initializable {
 		box.getChildren().addAll(ipCommentlabel, ipInput, portCommentlabel, portInput, b);
 		
 		b.setOnAction(e -> {
-			ip[0] = ipInput.getText();
-			port[0] = Integer.parseInt(portInput.getText());
-			sendDataToSolver(ip[0], port[0]);
+			solverIP = ipInput.getText();
+			solverPort = Integer.parseInt(portInput.getText());
+			sendDataToSolver();
 			commentWindow.close();
 		});
 		
@@ -158,13 +158,13 @@ public class MainWindowController extends Window implements Initializable {
 			commentWindow.show();
 		}
 		else
-			sendDataToSolver(ip[0], port[0]);
+			sendDataToSolver();
 		
 		
 	}
-	private void sendDataToSolver(String ip, int port) {
+	private void sendDataToSolver() {
 		try {
-			server = new Socket(ip, port);
+			server = new Socket(solverIP, solverPort);
 			System.out.println("Client is connected to a remote Server.");
 			BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
 			outToSolver = new PrintWriter(server.getOutputStream());
@@ -212,7 +212,7 @@ public class MainWindowController extends Window implements Initializable {
 	}
 	
 	
-	public void RadioButtonClicked() {
+	public void radioButtonClicked() {
 		tg = new ToggleGroup();
 		manual.setToggleGroup(tg);
 		auto.setToggleGroup(tg);
