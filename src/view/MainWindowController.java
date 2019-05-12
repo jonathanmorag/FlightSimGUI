@@ -2,7 +2,6 @@ package view;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,10 +16,10 @@ import java.util.Scanner;
 import interpreter.Interpreter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -32,7 +31,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -40,35 +38,29 @@ import javafx.stage.Window;
 import matrix.Matrix;
 import matrix.Position;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 public class MainWindowController extends Window implements Initializable {
 
 	PrintWriter outToSolver;
 	PrintWriter outToSim;
+	@FXML JoystickController joystick;
 	@FXML MapDrawer mapDrawer;
 	@FXML RadioButton manual;
 	@FXML RadioButton auto;
-	@FXML JoystickDrawer joystickDrawer;
+	@FXML JoystickController joystickDrawer;
 	@FXML TextArea textArea;
 	@FXML Circle outerCircle;
 	@FXML Circle innerCircle;
 	@FXML Slider rudderSlider;
 	@FXML Slider throttleSlider;
+	@FXML ToggleGroup tg;
+	Socket server;
 	double orgSceneX;
 	double orgSceneY;
-	double centerX;
-	double centerY;
 	boolean manualFlag;
 	boolean autoFlag;
-	Matrix myData;
-	ToggleGroup tg;
-	static Socket server;
-	static String ip;
-	static int port;
-	
+	Matrix matrix;
 	
 	public void connectClicked() {
 		String[] ip = new String[1];
@@ -86,13 +78,12 @@ public class MainWindowController extends Window implements Initializable {
 		b.setOnAction(e -> {
 			ip[0] = ipInput.getText();
 			port[0] = Integer.parseInt(portInput.getText());
-			System.out.println("IP: " + ip + " Port: " + port);
 			try {
 				server = new Socket(ip[0], port[0]);
 				outToSim = new PrintWriter(server.getOutputStream());
 				System.out.println("Client is connected to a remote Server.");
-			} catch (IOException exe) {
-			} finally {
+			} catch (IOException exe) {}
+			finally {
 				commentWindow.close();
 			}
 		});
@@ -106,23 +97,20 @@ public class MainWindowController extends Window implements Initializable {
 		fc.setSelectedExtensionFilter(new ExtensionFilter("Text Files", "*.txt"));
 		File selectedFile = fc.showOpenDialog(this);
 		if (selectedFile != null) {
-			BufferedReader d;
+			BufferedReader reader;
 			try {
-				d = new BufferedReader(new FileReader(selectedFile));
-				String[] result = d.readLine().split(",");
+				reader = new BufferedReader(new FileReader(selectedFile));
+				String[] result = reader.readLine().split(",");
 				Position start = new Position(Integer.parseInt(result[0]), Integer.parseInt(result[1]));
-				int cellSize = Integer.parseInt(result[2]);
+				// int cellSize = Integer.parseInt(result[2]);
 				String[] heights = Arrays.copyOfRange(result, 3, result.length);
-				myData = BuildMatrix(heights, start);
-				// System.out.println(myData); // check if matrix was build successfully
-				mapDrawer.setHeightData(myData); // painting
-				mapDrawer.setHeightData(myData);
+				matrix = BuildMatrix(heights, start);
+				mapDrawer.setHeightData(matrix); // painting
 				for (int i = 0; i < 7; i++) {
 					mapDrawer.setAirplanePosition(i, i);
 				}
-				d.close();
-			} catch (IOException e) {
-			}
+				reader.close();
+			} catch (IOException e) {}
 		}
 	}
 
@@ -136,12 +124,19 @@ public class MainWindowController extends Window implements Initializable {
 				c++;
 			}
 		}
-		Matrix m = new Matrix(mat, start, null);
-		return m;
+		return new Matrix(mat, start, null);
 
 	}
+	
+	public void closeFromMenuBarClicked(ActionEvent e) {
+		// to implement
+		//Stage window = (Stage)this.getScene().getWindow();
+		//window.close();
+	}
 
-	public void CalculatePathClicked() {
+	public void calculatePathClicked() {
+		String[]ip = new String[1];
+		int[] port = new int[1];
 		Stage commentWindow = new Stage();
 		VBox box = new VBox(20);
 		Label ipCommentlabel = new Label("Enter ip of a solver server");
@@ -150,31 +145,33 @@ public class MainWindowController extends Window implements Initializable {
 		TextField portInput = new TextField();
 		Button b = new Button("Submit");
 		box.getChildren().addAll(ipCommentlabel, ipInput, portCommentlabel, portInput, b);
+		
+		b.setOnAction(e -> {
+			ip[0] = ipInput.getText();
+			port[0] = Integer.parseInt(portInput.getText());
+			sendDataToSolver(ip[0], port[0]);
+			commentWindow.close();
+		});
+		
 		if(server==null) {
 			commentWindow.setScene(new Scene(box, 350, 250));
 			commentWindow.show();
 		}
-		b.setOnAction(e -> {
-				ip = ipInput.getText();
-				port = Integer.parseInt(portInput.getText());
-			sendDataToSolver();
-			commentWindow.close();
-		});
-		if(server!=null) {
-			sendDataToSolver();
-		}
+		else
+			sendDataToSolver(ip[0], port[0]);
+		
 		
 	}
-	private void sendDataToSolver() {
+	private void sendDataToSolver(String ip, int port) {
 		try {
 			server = new Socket(ip, port);
 			System.out.println("Client is connected to a remote Server.");
 			BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
 			outToSolver = new PrintWriter(server.getOutputStream());
 			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < myData.getData().length; i++) {
-				for (int j = 0; j < myData.getData()[0].length; j++) {
-					sb.append(myData.getData()[i][j] + ",");
+			for (int i = 0; i < matrix.getData().length; i++) {
+				for (int j = 0; j < matrix.getData()[0].length; j++) {
+					sb.append(matrix.getData()[i][j] + ",");
 				}
 
 				outToSolver.println(sb.substring(0, sb.length() - 1).toString());
@@ -186,17 +183,13 @@ public class MainWindowController extends Window implements Initializable {
 			outToSolver.flush();
 //			out.println("8,8");
 			// out.println(myData.getEntrance().row+","+myData.getEntrance().col);
-			outToSolver.println(myData.getExit().row+","+myData.getExit().col);
+			outToSolver.println(matrix.getExit().row+","+matrix.getExit().col);
 			outToSolver.flush();
 
 			System.out.println(in.readLine());
-		} catch (IOException exe) {
-		} 
+		} catch (IOException e) {} 
 	}
 
-	public void LoadJoystick() {
-
-	}
 	
 	public void aboutClicked() {
 		Stage window = new Stage();
@@ -212,8 +205,8 @@ public class MainWindowController extends Window implements Initializable {
 		});
 		b.setTranslateY(40);
 		root.getChildren().addAll(t, b);
-		
-		StackPane.setAlignment(t, Pos.CENTER);
+		b.setPadding(new Insets(12));
+		t.setTranslateY(-15);
 		window.setScene(new Scene(root, 200, 200));
 		window.show();
 	}
@@ -298,11 +291,10 @@ public class MainWindowController extends Window implements Initializable {
 	
 	public void mapClicked(MouseEvent e) {
 		
-			System.out.println("sss2");
 //			System.out.println("X: " + (e.getSceneX()-5) + "Y: " + (e.getSceneY()-60));
-			myData.setExit(mapDrawer.setRoute((e.getSceneX() -5),(e.getSceneY()-60)));
+			matrix.setExit(mapDrawer.setRoute((e.getSceneX() -5),(e.getSceneY()-60)));
 			if(server!=null) {
-				CalculatePathClicked();
+				calculatePathClicked();
 			}
 	}
 
@@ -337,6 +329,7 @@ public class MainWindowController extends Window implements Initializable {
             		}
             }
         });
+		
 	}
 
 }

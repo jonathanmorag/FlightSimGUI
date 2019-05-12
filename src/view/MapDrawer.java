@@ -29,7 +29,7 @@ public class MapDrawer extends Canvas {
 	}
 	
 		public Position setRoute(double clickedX, double clickedY) {
-			double cellSize = (double)((300.0)/(double)(heightData.length));
+			double cellSize = (double)((400.0)/(double)(heightData.length));
 			toDrawCol = (int)((clickedX)/cellSize);
 			toDrawRow = (int)((clickedY)/cellSize);
 			redraw();												//Drawing X

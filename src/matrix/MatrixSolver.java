@@ -17,7 +17,6 @@ public class MatrixSolver implements Solver<List<String>, String> {
     public String solve(List<String> problem) {
 
         Searcher<Position> BestFSsearcher = new BestFirstSearch<>();
-        System.out.println("BestFirstSearching");
         List<State<Position>> bt = BestFSsearcher.search(MatrixConverter.problemToMatrixSearchable(problem));
         
         List<String> sol= MatrixConverter.backtraceToSolution(bt);

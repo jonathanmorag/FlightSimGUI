@@ -11,19 +11,19 @@
 <?import javafx.scene.layout.BorderPane?>
 
 <?import view.MapDrawer?>
-<?import view.JoystickDrawer?> 
+<?import view.JoystickController?>
 
-<BorderPane prefHeight="411.0" prefWidth="522.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
+<BorderPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <MapDrawer fx:id="mapDrawer" height="300.0" onMouseClicked="#mapClicked" width="300.0">
+                  <MapDrawer fx:id="mapDrawer" height="400.0" onMouseClicked="#mapClicked" width="400.0">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin></MapDrawer>
-                  <Group>
+                  <JoystickController fx:id="joystick" translateX="40.0" translateY="60.0">
                      <children>
                         <Circle fx:id="outerCircle" fill="#E0E0E0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
                         <Circle fx:id="innerCircle" fill="#7c7c7c" onMouseDragged="#innerDragged" onMousePressed="#innerPressed" onMouseReleased="#innerReleased" radius="50.0" stroke="BLACK" strokeType="INSIDE" /> 
@@ -54,7 +54,7 @@
                            </font>
                         </Label>
                      </children>
-                  </Group>
+                  </JoystickController>
                </children>
             </HBox>
          </children>
@@ -67,7 +67,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                    <MenuItem mnemonicParsing="false" onAction="#closeFromMenuBarClicked" text="Close" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -82,14 +82,23 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <HBox maxHeight="54.0" prefHeight="30.0" prefWidth="505.0" spacing="10.0">
+            <HBox maxHeight="54.0" prefHeight="30.0" prefWidth="505.0" spacing="12.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#connectClicked" text="Connect" />
+                  <Button mnemonicParsing="false" onAction="#connectClicked" text="Connect">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></Button>
                   <Button mnemonicParsing="false" onAction="#loadDataClicked" text="Load data" />
-                  <Button mnemonicParsing="false" onAction="#CalculatePathClicked" text="Calculate path " />
-                  <RadioButton fx:id="auto" mnemonicParsing="false" onAction="#RadioButtonClicked" text="Autopilot" />
+                  <Button mnemonicParsing="false" onAction="#calculatePathClicked" text="Calculate path " />
+                  <RadioButton fx:id="auto" mnemonicParsing="false" onAction="#RadioButtonClicked" text="Autopilot">
+                     <padding>
+                        <Insets left="250.0" />
+                     </padding></RadioButton>
                   <RadioButton fx:id="manual" mnemonicParsing="false" onAction="#RadioButtonClicked" text="Manual" />
                </children>
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
             </HBox>
          </children>
          <BorderPane.margin>
