@@ -1,4 +1,4 @@
-package ShuntingYard;
+package shuntingYard;
 
 public class Q2 {
 	public static double calc() {

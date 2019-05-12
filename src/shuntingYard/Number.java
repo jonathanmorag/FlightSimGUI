@@ -1,4 +1,4 @@
-package ShuntingYard;
+package shuntingYard;
 
 public class Number implements Expression {
 	private double value;

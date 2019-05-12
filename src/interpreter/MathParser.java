@@ -1,7 +1,7 @@
 package interpreter;
 import java.util.Arrays;
 
-import ShuntingYard.Q3;
+import shuntingYard.Q3;
 
 public class MathParser {
 	public static void parse(String[] expression) {

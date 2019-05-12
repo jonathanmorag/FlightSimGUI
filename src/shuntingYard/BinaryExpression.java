@@ -1,4 +1,4 @@
-package ShuntingYard;
+package shuntingYard;
 
 public abstract class BinaryExpression implements Expression {
 

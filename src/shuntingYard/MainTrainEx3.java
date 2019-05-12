@@ -1,4 +1,4 @@
-package ShuntingYard;
+package shuntingYard;
 
 public class MainTrainEx3 {
 	

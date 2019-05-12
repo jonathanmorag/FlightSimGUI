@@ -19,6 +19,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +28,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -197,19 +199,26 @@ public class MainWindowController extends Window implements Initializable {
 	}
 	
 	public void aboutClicked() {
-		ImageView imv = new ImageView();
-		Text T = new Text("All Rights Reserved to Royi Hamo & Jonathan Morag");
-//		T.setTextOrigin(VPos.TOP);
-		T.setTextAlignment(TextAlignment.CENTER);
-//		T.setTextOrigin(value);
-		Stage commentWindow = new Stage();
-		VBox box = new VBox(20);
-		Image im = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/All_rights_reserved_logo.svg/240px-All_rights_reserved_logo.svg.png");
-		imv.setImage(im);
-		box.getChildren().addAll(T,imv);
-			commentWindow.setScene(new Scene(box, 500, 500));
-			commentWindow.show();
+		Stage window = new Stage();
+		window.setHeight(180);
+		window.setWidth(400);
+		window.setTitle("About");
+		StackPane root = new StackPane();
+		Text t = new Text("© 2019 All Rights Reserved to Royi Hamo & Jonathan Morag");
+		Button b = new Button("OK");
+		b.setOnMouseClicked(e-> {
+			Stage s = (Stage)b.getScene().getWindow();
+			s.close();
+		});
+		b.setTranslateY(40);
+		root.getChildren().addAll(t, b);
+		
+		StackPane.setAlignment(t, Pos.CENTER);
+		window.setScene(new Scene(root, 200, 200));
+		window.show();
 	}
+	
+	
 	public void RadioButtonClicked() {
 		tg = new ToggleGroup();
 		manual.setToggleGroup(tg);

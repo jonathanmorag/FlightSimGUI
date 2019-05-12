@@ -1,4 +1,4 @@
-package ShuntingYard;
+package shuntingYard;
 
 import java.util.LinkedList;
 import java.util.Stack;

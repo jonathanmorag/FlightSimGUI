@@ -1,6 +1,6 @@
 package interpreter;
 
-import ShuntingYard.Q3;
+import shuntingYard.Q3;
 
 public class ReturnCommand implements Command {
 
