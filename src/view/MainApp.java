@@ -2,35 +2,32 @@ package view;
 	
 import javafx.application.Application;
 import javafx.stage.Stage;
-import server_side.MyClientHandler;
-import server_side.MySerialServer;
-import server_side.Server;
+import server_side.AirplaneListener;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.fxml.FXMLLoader;
 
 
-public class Main extends Application {
+public class MainApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
+			AirplaneListener al = new AirplaneListener(5500);
+			FXMLLoader fxl = new FXMLLoader();
+			// BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
+			BorderPane root = fxl.load(getClass().getResource("MainWindow.fxml").openStream());
 			Scene scene = new Scene(root,800,600);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			MainWindowController mwc = fxl.getController();
+			al.addObserver(mwc);
+			al.start();
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {}
 	}
 	
 	public static void main(String[] args) {
-		Server s = null;
-		try {
-			s = new MySerialServer(1234);
-			s.start(new MyClientHandler());
-			launch(args);
-		} catch (Exception e) {}
-		finally {
-			s.stop();
-		}
+		launch(args);
 	}
+	
 }

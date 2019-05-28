@@ -2,6 +2,8 @@ package view;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,9 +24,9 @@ public class MapDrawer extends Canvas {
 		heightData = m.getData();
 		redraw();
 	}
-	public void setAirplanePosition(int r,int c) {
-		aCol=r;
-		aRow=c;
+	public void setAirplanePosition(Position pos) {
+		aCol=pos.col;
+		aRow=pos.row;
 		redraw();
 	}
 	
@@ -64,7 +66,7 @@ public class MapDrawer extends Canvas {
 					}
 			}
 		}
-		gc.drawImage(airplane,aCol*w,aRow*h,3*w,3*h);					//draw Airplane
+		gc.drawImage(airplane,aCol*w,aRow*h,2*w,2*h);					//draw Airplane
 		}
 		
 	}
@@ -90,4 +92,5 @@ public class MapDrawer extends Canvas {
 			
 			return null;
 		}
+		
 }

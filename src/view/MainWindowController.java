@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -37,10 +39,11 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import matrix.Matrix;
 import matrix.Position;
+import server_side.AirplaneListener;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 
-public class MainWindowController extends Window implements Initializable {
+public class MainWindowController extends Window implements Initializable, Observer {
 
 	PrintWriter outToSolver;
 	PrintWriter outToSim;
@@ -91,6 +94,10 @@ public class MainWindowController extends Window implements Initializable {
 		});
 
 	}
+	
+	public void onAirplanePositionChange() {
+		mapDrawer.setAirplanePosition(AirplaneListener.airplanePosition);
+	}
 
 	public void loadDataClicked() {
 		FileChooser fc = new FileChooser();
@@ -103,27 +110,27 @@ public class MainWindowController extends Window implements Initializable {
 			try {
 				reader = new BufferedReader(new FileReader(selectedFile));
 				String[] result = reader.readLine().split(",");
-				Position start = new Position(Integer.parseInt(result[0]), Integer.parseInt(result[1]));
-				// int cellSize = Integer.parseInt(result[2]);
-				String[] heights = Arrays.copyOfRange(result, 3, result.length);
-				matrix = buildMatrix(heights, start);
+				Position start = new Position((int)Double.parseDouble(result[0]),(int)Double.parseDouble(result[1]));
+				 int cellSize = Integer.parseInt(result[2]);
+				String[] heights = Arrays.copyOfRange(result, 4, result.length);
+				matrix = buildMatrix(heights, start,cellSize);
 				mapDrawer.setHeightData(matrix); // painting
-				for (int i = 0; i < 7; i++) {
-					mapDrawer.setAirplanePosition(i, i);
-				}
+				
+				
+				
 				reader.close();
 			} catch (IOException e) {}
 		}
 	}
+	
 
-	public Matrix buildMatrix(String[] dataFromCsv, Position start/* ,int[] cellsize? */) {
+	public Matrix buildMatrix(String[] dataFromCsv, Position start,int cellsize) {
 		int size = (int) Math.sqrt(dataFromCsv.length);
 		int[][] mat = new int[size][size];
 		int c = 0;
 		for (int i = 0; i < mat.length; i++) {
 			for (int j = 0; j < mat[i].length; j++) {
-				mat[i][j] = Integer.parseInt(dataFromCsv[c]);
-				c++;
+				mat[i][j] = Integer.parseInt(dataFromCsv[c++]);
 			}
 		}
 		return new Matrix(mat, start, null);
@@ -330,6 +337,11 @@ public class MainWindowController extends Window implements Initializable {
             }
         });
 		
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		onAirplanePositionChange();
 	}
 
 }

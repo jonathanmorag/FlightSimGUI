@@ -1,27 +1,35 @@
 package server_side;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Observable;
 import java.util.Scanner;
 
+import matrix.Position;
+import matrix.PositionConverter;
+import view.MainWindowController;
 
-public class MySerialServer implements Server {
+
+public class AirplaneListener extends Observable {
 	
 	volatile boolean stop;
 	int port;
+	public static volatile Position airplanePosition;
 	
-	public MySerialServer(int port) {
+	public AirplaneListener(int port) {
 		this.port = port;
 		stop = false;
 	}
 
-	@Override
-	public void start(ClientHandler ch) throws Exception {
+	public void start() throws Exception {
 	new Thread(() -> {
 			try {
 				System.out.println("Server is open and waiting for Clients . . . ");
-				runServer(port, ch);
+				runServer();
 			} catch (Exception e) {
 				stop = true;
 				e.printStackTrace();
@@ -29,24 +37,30 @@ public class MySerialServer implements Server {
 		}).start();
 	}
 
-	@Override
 	public void stop() {
 		this.stop = true;
 	}
 
 	
-	private void runServer(int port, ClientHandler ch) throws Exception {
+	private void runServer() throws Exception {
 		ServerSocket server = new ServerSocket(port);
 		server.setSoTimeout(1000);
 
 		while (!stop) {
 			try {
 				Socket aClient = server.accept(); // Client connected successfully
-				//System.out.println("Client " + aClient.getRemoteSocketAddress() + " is now Connected . . . ");
+				System.out.println("Client " + aClient.getRemoteSocketAddress() + " is now Connected . . . ");
 				// System.out.flush();
 				try {
-					ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
-					aClient.close();
+					BufferedReader userInput = new BufferedReader(new InputStreamReader(aClient.getInputStream()));
+					while(true) {
+						String[] tempCoo = userInput.readLine().split(",");  // 32.0131110,34.8752310
+						airplanePosition = PositionConverter
+								.convert(Double.parseDouble(tempCoo[0]),Double.parseDouble(tempCoo[1]));
+								setChanged();
+								notifyObservers();
+					}
+//					aClient.close();
 				} catch (IOException e) {
 					// e.printStackTrace();
 				}
@@ -76,10 +90,10 @@ public class MySerialServer implements Server {
 //	}
 
 	public static void main(String[] args) {
-		Server s = null;
+		AirplaneListener s = null;
 		try {
-			s= new MySerialServer(1234);
-			s.start(new MyClientHandler());
+			s= new AirplaneListener(5500);
+			s.start();
 			Scanner in = new Scanner(System.in);
 			in.nextLine();
 			s.stop();

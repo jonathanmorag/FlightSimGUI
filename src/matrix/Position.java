@@ -10,6 +10,10 @@ public class Position {
 		this.col = col;
 	}
 
+	public Position(String x, String y) {
+		//
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
