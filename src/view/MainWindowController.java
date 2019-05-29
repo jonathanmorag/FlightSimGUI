@@ -44,7 +44,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 
 public class MainWindowController extends Window implements Initializable, Observer {
-
+	
 	PrintWriter outToSolver;
 	PrintWriter outToSim;
 	@FXML JoystickController joystick;
@@ -59,6 +59,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 	@FXML Slider throttleSlider;
 	@FXML ToggleGroup tg;
 	Socket server;
+	public static double startX;
+	public static double startY;
 	double orgSceneX;
 	double orgSceneY;
 	boolean manualFlag;
@@ -110,7 +112,9 @@ public class MainWindowController extends Window implements Initializable, Obser
 			try {
 				reader = new BufferedReader(new FileReader(selectedFile));
 				String[] result = reader.readLine().split(",");
-				Position start = new Position((int)Double.parseDouble(result[0]),(int)Double.parseDouble(result[1]));
+				startX = Double.parseDouble(result[0]);
+				startY = Double.parseDouble(result[1]);
+				Position start = new Position((int)startX,(int)startY);
 				 int cellSize = Integer.parseInt(result[2]);
 				String[] heights = Arrays.copyOfRange(result, 4, result.length);
 				matrix = buildMatrix(heights, start,cellSize);

@@ -56,7 +56,7 @@ public class AirplaneListener extends Observable {
 					while(true) {
 						String[] tempCoo = userInput.readLine().split(",");  // 32.0131110,34.8752310
 						airplanePosition = PositionConverter
-								.convert(Double.parseDouble(tempCoo[0]),Double.parseDouble(tempCoo[1]));
+								.convert(Double.parseDouble(tempCoo[0]),Double.parseDouble(tempCoo[1]),MainWindowController.startX,MainWindowController.startY);
 								setChanged();
 								notifyObservers();
 					}
