@@ -2,6 +2,11 @@ package Models;
 
 import server_side.Solver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
@@ -15,6 +20,8 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 	Matrix resultMatrix;
 	double startCoordinateX;
 	double startCoordinateY;
+	PrintWriter outToSolver;
+	BufferedReader in;
 	
 	public Matrix getMatrix() {
 		return resultMatrix;
@@ -44,6 +51,53 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 	public double getStartCooY() {
 		return startCoordinateY;
 	}
+	public void connect(String ip, int port) {
+		try {
+			Socket server = new Socket(ip, port);
+			 in = new BufferedReader(new InputStreamReader(server.getInputStream()));
+			outToSolver = new PrintWriter(server.getOutputStream());
+		} catch (IOException e) {}
+		System.out.println("Connected to a solver server.");
+	}
+	
+	public void setExitPosition(Position exit) {
+		resultMatrix.setExit(exit);
+	}
+	
+	public void requestSolution() {
+		if(outToSolver==null) {
+			System.out.println("you are not connected to a solver.");
+			return;
+		}
+		String[] problem = ConvertToProblem(this.resultMatrix);
+		for(String s : problem){
+			outToSolver.println(s);
+			outToSolver.flush();
+		}
+		outToSolver.println("end");
+		outToSolver.flush();
+		outToSolver.println("0,0");
+		outToSolver.flush();
+		outToSolver.println(resultMatrix.getExit().row+","+resultMatrix.getExit().col);
+		outToSolver.flush();
+			try {
+				System.out.println("Shortest path: " + in.readLine());
+			} catch (IOException e) {}
+	}
+	
+	public String[] ConvertToProblem(Matrix matrix) {
+		String[] problem = new String[matrix.getData().length];
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < matrix.getData().length; i++) {
+			for (int j = 0; j < matrix.getData()[0].length; j++) {
+				sb.append(matrix.getData()[i][j] + ",");
+			}
+			problem[i] = sb.substring(0, sb.length() - 1).toString();
+		}
+		return problem;
+	}
+	
+	
     @Override
     public String solve(List<String> problem) {
 

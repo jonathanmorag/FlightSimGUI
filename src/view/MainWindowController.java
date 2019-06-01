@@ -17,6 +17,8 @@ import java.util.Scanner;
 
 import Models.Property;
 import interpreter.Interpreter;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -48,48 +50,63 @@ public class MainWindowController extends Window implements Initializable, Obser
 	
 	ViewModel vm;
 	PrintWriter outToSolver;
-	PrintWriter outToSim;
-	@FXML JoystickController joystick;
+	
 	@FXML MapDrawer mapDrawer;
 	@FXML RadioButton manual;
 	@FXML RadioButton auto;
-	@FXML JoystickController joystickDrawer;
 	@FXML TextArea textArea;
 	@FXML Circle outerCircle;
 	@FXML Circle innerCircle;
+	@FXML ToggleGroup tg;
 	
+
+	//--------------simulator-----------------
+	//controls
 	@FXML Slider rudderSlider;
 	@FXML Slider throttleSlider;
+	public DoubleProperty elevator;
+	public DoubleProperty aileron;
+	public Property<String> ipSim;
+	public Property<String> portSim;
+//	public Property<Position> startPos;
+	public Property<Position> exitPos;
+	//----------------------------------------
 	
-	@FXML ToggleGroup tg;
-	Socket server;
-	public Property<String> ipInput;
-	public Property<String> portInput;
+	//----------------solver------------------
+	public Property<String> ipSolver;
+	public Property<String> portSolver;
+	//----------------------------------------
+	
+	
 	
 	//properties
 	public Property<Matrix> propertyMat;
-	public Property<Position> startPos;
 	public Property<String[]> csv;
 	
-	public static double startX;
-	public static double startY;
 	double orgSceneX;
 	double orgSceneY;
 	boolean manualFlag;
 	boolean autoFlag;
 	Matrix matrix;
-	static String solverIP;
-	static int solverPort;
 	
 	int airplanePosX;
 	int airplanePosY;
 	
+	//define bindings
 	public void setViewModel(ViewModel vm) {
 		this.vm=vm;
 		propertyMat.bindTo(vm.propertyMat);
 		vm.csv.bindTo(this.csv);
-		vm.ipSim.bindTo(this.ipInput);
-		vm.portSim.bindTo(this.portInput);
+		vm.ipSim.bindTo(this.ipSim);
+		vm.portSim.bindTo(this.portSim);
+		vm.ipSolver.bindTo(this.ipSolver);
+		vm.portSolver.bindTo(this.portSolver);
+		vm.exitPos.bindTo(this.exitPos);
+		//controls
+		vm.rudder.bind(this.rudderSlider.valueProperty());
+		vm.throttle.bind(this.throttleSlider.valueProperty());
+		vm.aileron.bind(this.aileron);
+		vm.elevator.bind(this.elevator);
 	}
 	
 	
@@ -107,10 +124,10 @@ public class MainWindowController extends Window implements Initializable, Obser
 		commentWindow.setScene(new Scene(box, 350, 250));
 		commentWindow.show();
 		b.setOnAction(e -> {
-			this.ipInput.set(ipInput.getText());
-			this.portInput.set(portInput.getText());
-			System.out.println("mwc" + this.ipInput.get() + " " + this.portInput.get());
-			commentWindow.close();vm.connect();
+			this.ipSim.set(ipInput.getText());
+			this.portSim.set(portInput.getText());
+			commentWindow.close();
+			vm.connectToSimulator();
 		});
 
 	}
@@ -150,50 +167,52 @@ public class MainWindowController extends Window implements Initializable, Obser
 		TextField portInput = new TextField();
 		Button b = new Button("Submit");
 		box.getChildren().addAll(ipCommentlabel, ipInput, portCommentlabel, portInput, b);
-		
+		commentWindow.setScene(new Scene(box, 350, 250));
+		commentWindow.show();
 		b.setOnAction(e -> {
-			solverIP = ipInput.getText();
-			solverPort = Integer.parseInt(portInput.getText());
-			sendDataToSolver();
+			ipSolver.set(ipInput.getText());
+			portSolver.set(portInput.getText());
 			commentWindow.close();
+			vm.connectToSolver();
 		});
 		
-		if(server==null) {
-			commentWindow.setScene(new Scene(box, 350, 250));
-			commentWindow.show();
-		}
-		else
-			sendDataToSolver();
-		
-		
+//		if(server==null) {
+//			commentWindow.setScene(new Scene(box, 350, 250));
+//			commentWindow.show();
+//		}
+//		else
+//			sendDataToSolver();
 	}
-	private void sendDataToSolver() {
-		try {
-			server = new Socket(solverIP, solverPort);
-			System.out.println("Client is connected to a remote Server.");
-			BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
-			outToSolver = new PrintWriter(server.getOutputStream());
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < matrix.getData().length; i++) {
-				for (int j = 0; j < matrix.getData()[0].length; j++) {
-					sb.append(matrix.getData()[i][j] + ",");
-				}
-
-				outToSolver.println(sb.substring(0, sb.length() - 1).toString());
-				outToSolver.flush();
-			}
-			outToSolver.println("end");
-			outToSolver.flush();
-			outToSolver.println("0,0");
-			outToSolver.flush();
+	
+//	private void sendDataToSolver() {
+//		try {
+//			server = new Socket(solverIP, solverPort);
+//			System.out.println("Connected to a solver server.");
+//			BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
+//			outToSolver = new PrintWriter(server.getOutputStream());
+			
+			//convert matrix to a problem
+//			for (int i = 0; i < matrix.getData().length; i++) {
+//				StringBuilder sb = new StringBuilder();
+//				for (int j = 0; j < matrix.getData()[0].length; j++) {
+//					sb.append(matrix.getData()[i][j] + ",");
+//				}
+//				outToSolver.println(sb.substring(0, sb.length() - 1).toString());
+//				outToSolver.flush();
+//			}
+//			ConvertToProblem(matrix);
+//			outToSolver.println("end");
+//			outToSolver.flush();
+//			outToSolver.println("0,0");
+//			outToSolver.flush();
 //			out.println("8,8");
 			// out.println(myData.getEntrance().row+","+myData.getEntrance().col);
-			outToSolver.println(matrix.getExit().row+","+matrix.getExit().col);
-			outToSolver.flush();
-
-			System.out.println(in.readLine());
-		} catch (IOException e) {} 
-	}
+//			outToSolver.println(matrix.getExit().row+","+matrix.getExit().col);
+//			outToSolver.flush();
+//
+//			System.out.println(in.readLine());
+//		} catch (IOException e) {} 
+//	}
 
 	
 	public void aboutClicked() {
@@ -236,14 +255,15 @@ public class MainWindowController extends Window implements Initializable, Obser
 			fc.setSelectedExtensionFilter(new ExtensionFilter("Text Files", "*.txt"));
 			File selectedFile = fc.showOpenDialog(this);
 			try {
-				Scanner sc = new Scanner(selectedFile);
+				Scanner sc = new Scanner(selectedFile); //display chosen file in text area
 				while (sc.hasNextLine()) {
 					textArea.appendText(sc.nextLine());
 					textArea.appendText("\n");
 				}
 				sc.close();
 				Interpreter i = new Interpreter();
-				System.out.println(i.interpret(i.lexer(selectedFile.getName())));
+				System.out.println(i.interpret
+						(i.lexer(selectedFile.getName()))); //need to move logic to model .. :(
 			} catch (FileNotFoundException e) {
 			}
 
@@ -269,16 +289,13 @@ public class MainWindowController extends Window implements Initializable, Obser
 
 			//boudaries check
 			if(!outerCircle.contains(innerCircle.getCenterX(), innerCircle.getCenterY())) {return;}
-			System.out.println(innerCircle.getCenterX());
+//			System.out.println(innerCircle.getCenterX());
 				
 			//sending orders to sim
-			if(outToSim!=null) {
-				outToSim.flush();
-				outToSim.println("set /controls/flight/elevator " + (innerCircle.getCenterY()/(-100))); //uncomment when connected
-				outToSim.flush();
-				outToSim.println("set /controls/flight/aileron " + innerCircle.getCenterX()/100); //uncomment when connected
-				outToSim.flush();
-			}
+				elevator.set(innerCircle.getCenterY()/(-100));
+				vm.sendElevatorValues();
+				aileron.set(innerCircle.getCenterX()/100);
+				vm.sendAileronValues();
 				
 
 			Circle c = (Circle) (e.getSource());
@@ -297,18 +314,23 @@ public class MainWindowController extends Window implements Initializable, Obser
 	public void mapClicked(MouseEvent e) {
 		
 //			System.out.println("X: " + (e.getSceneX()-5) + "Y: " + (e.getSceneY()-60));
-			matrix.setExit(mapDrawer.setRoute((e.getSceneX() -5),(e.getSceneY()-60)));
-			if(server!=null) {
-				calculatePathClicked();
-			}
+			exitPos.set(mapDrawer.setRoute((e.getSceneX() -5),(e.getSceneY()-60)));
+			vm.setExitPosition();
+			vm.requestSolution();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		propertyMat = new Property<>();
 		csv = new Property<>();
-		ipInput = new Property<>();
-		portInput = new Property<>();
+		ipSim = new Property<>();
+		portSim = new Property<>();
+		ipSolver = new Property<>();
+		portSolver = new Property<>();
+		elevator = new SimpleDoubleProperty();
+		aileron = new SimpleDoubleProperty();
+//		startPos = new Property<>();
+		exitPos = new Property<>();
 		manual.setSelected(true);
 		manualFlag = true;
 		throttleSlider.setMin(0);
@@ -320,10 +342,7 @@ public class MainWindowController extends Window implements Initializable, Obser
             public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
             	if(manualFlag) {
-                    System.out.println("rudder: "+ new_val);
-                    outToSim.flush();
-                    outToSim.println("set /controls/flight/rudder "+ new_val); //uncomment when connected
-                    outToSim.flush();
+            		vm.sendRudderValues();
             	}
             }
         });
@@ -331,14 +350,10 @@ public class MainWindowController extends Window implements Initializable, Obser
             public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
             		if(manualFlag) {
-            			System.out.println("throttle: "+ new_val);
-            			outToSim.flush();
-            			outToSim.println("set /controls/engines/current-engine/throttle "+ new_val); //uncomment when connected
-            			outToSim.flush();
+            			vm.sendThrottleValues();
             		}
             }
         });
-		
 	}
 
 	@Override
@@ -347,10 +362,10 @@ public class MainWindowController extends Window implements Initializable, Obser
 		if(data.equals("airplane")) {
 			airplanePosX = vm.airplanePosX.get();
 			airplanePosY = vm.airplanePosY.get();
-			onAirplanePositionChange();
+			onAirplanePositionChange();					//painting airplane
 		}
 		if(data.equals("matrix")) {
-			mapDrawer.setHeightData(propertyMat.get()); //painting
+			mapDrawer.setHeightData(propertyMat.get()); //painting map
 		}
 		
 	}

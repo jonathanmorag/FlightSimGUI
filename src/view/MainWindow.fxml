@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.BorderPane?>
 
 <?import view.MapDrawer?>
-<?import view.JoystickController?>
 
 <BorderPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <center>
@@ -23,7 +22,7 @@
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin></MapDrawer>
-                  <JoystickController fx:id="joystick" translateX="40.0" translateY="60.0">
+                  <Group translateX="40.0" translateY="60.0">
                      <children>
                         <Circle fx:id="outerCircle" fill="#E0E0E0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
                         <Circle fx:id="innerCircle" fill="#7c7c7c" onMouseDragged="#innerDragged" onMousePressed="#innerPressed" onMouseReleased="#innerReleased" radius="50.0" stroke="BLACK" strokeType="INSIDE" /> 
@@ -54,7 +53,7 @@
                            </font>
                         </Label>
                      </children>
-                  </JoystickController>
+                  </Group>
                </children>
             </HBox>
          </children>

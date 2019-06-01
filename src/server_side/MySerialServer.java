@@ -80,10 +80,10 @@ public class MySerialServer implements Server {
 		try {
 			s= new MySerialServer(1234);
 			s.start(new MyClientHandler());
-			Scanner in = new Scanner(System.in);
-			in.nextLine();
-			s.stop();
-			in.close();
+//			Scanner in = new Scanner(System.in);
+//			in.nextLine();
+//			s.stop();
+//			in.close();
 		} catch (Exception e) {}
 	}
 }

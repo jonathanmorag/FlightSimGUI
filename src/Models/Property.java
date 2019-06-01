@@ -3,7 +3,11 @@ package Models;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Property<V> extends Observable implements Observer {
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
+public class Property<V> extends Observable implements Observer, ObservableValue<V> {
 	
 	V v;
 	
@@ -28,6 +32,31 @@ public class Property<V> extends Observable implements Observer {
 		if(other.v != v || v == null) {
 			set(other.v);
 		}
+	}
+
+	@Override
+	public void addListener(InvalidationListener listener) {
+	}
+
+	@Override
+	public void removeListener(InvalidationListener listener) {
+	}
+
+	@Override
+	public void addListener(ChangeListener<? super V> listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeListener(ChangeListener<? super V> listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public V getValue() {
+		return v;
 	}
 	
 //	public static void main(String[] args) {
