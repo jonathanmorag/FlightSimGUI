@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import matrix.MatrixSolver;
+import Models.MatrixModel;
 
 public class MyClientHandler implements ClientHandler { //Client Handler that handles Strings inversions only
 	
@@ -17,7 +17,7 @@ public class MyClientHandler implements ClientHandler { //Client Handler that ha
 	CacheManager<List<String>, String> cm;
 	
 	public MyClientHandler() {
-		solver = new MatrixSolver();
+		solver = new MatrixModel();
 		cm = new FileCacheManager<>();
 	}
 	

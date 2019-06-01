@@ -9,16 +9,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+
+import Models.Property;
 import interpreter.Interpreter;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -39,12 +41,12 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import matrix.Matrix;
 import matrix.Position;
-import server_side.AirplaneListener;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 
 public class MainWindowController extends Window implements Initializable, Observer {
 	
+	ViewModel vm;
 	PrintWriter outToSolver;
 	PrintWriter outToSim;
 	@FXML JoystickController joystick;
@@ -55,10 +57,20 @@ public class MainWindowController extends Window implements Initializable, Obser
 	@FXML TextArea textArea;
 	@FXML Circle outerCircle;
 	@FXML Circle innerCircle;
+	
 	@FXML Slider rudderSlider;
 	@FXML Slider throttleSlider;
+	
 	@FXML ToggleGroup tg;
 	Socket server;
+	public Property<String> ipInput;
+	public Property<String> portInput;
+	
+	//properties
+	public Property<Matrix> propertyMat;
+	public Property<Position> startPos;
+	public Property<String[]> csv;
+	
 	public static double startX;
 	public static double startY;
 	double orgSceneX;
@@ -69,36 +81,42 @@ public class MainWindowController extends Window implements Initializable, Obser
 	static String solverIP;
 	static int solverPort;
 	
+	int airplanePosX;
+	int airplanePosY;
+	
+	public void setViewModel(ViewModel vm) {
+		this.vm=vm;
+		propertyMat.bindTo(vm.propertyMat);
+		vm.csv.bindTo(this.csv);
+		vm.ipSim.bindTo(this.ipInput);
+		vm.portSim.bindTo(this.portInput);
+	}
+	
+	
 	public void connectClicked() {
-		String[] ip = new String[1];
-		int[] port = new int[1];
+		TextField ipInput;
+		TextField portInput;
 		Stage commentWindow = new Stage();
 		VBox box = new VBox(20);
 		Label ipCommentlabel = new Label("Enter the ip of the simulator");
-		TextField ipInput = new TextField();
+		ipInput = new TextField();
 		Label portCommentlabel = new Label("Enter the port of the simulator");
-		TextField portInput = new TextField();
+		portInput = new TextField();
 		Button b = new Button("Submit");
 		box.getChildren().addAll(ipCommentlabel, ipInput, portCommentlabel, portInput, b);
 		commentWindow.setScene(new Scene(box, 350, 250));
 		commentWindow.show();
 		b.setOnAction(e -> {
-			ip[0] = ipInput.getText();
-			port[0] = Integer.parseInt(portInput.getText());
-			try {
-				server = new Socket(ip[0], port[0]);
-				outToSim = new PrintWriter(server.getOutputStream());
-				System.out.println("Client is connected to a remote Server.");
-			} catch (IOException exe) {}
-			finally {
-				commentWindow.close();
-			}
+			this.ipInput.set(ipInput.getText());
+			this.portInput.set(portInput.getText());
+			System.out.println("mwc" + this.ipInput.get() + " " + this.portInput.get());
+			commentWindow.close();vm.connect();
 		});
 
 	}
 	
 	public void onAirplanePositionChange() {
-		mapDrawer.setAirplanePosition(AirplaneListener.airplanePosition);
+		mapDrawer.setAirplanePosition(new Position(airplanePosX,airplanePosY));
 	}
 
 	public void loadDataClicked() {
@@ -111,40 +129,16 @@ public class MainWindowController extends Window implements Initializable, Obser
 			BufferedReader reader;
 			try {
 				reader = new BufferedReader(new FileReader(selectedFile));
-				String[] result = reader.readLine().split(",");
-				startX = Double.parseDouble(result[0]);
-				startY = Double.parseDouble(result[1]);
-				Position start = new Position((int)startX,(int)startY);
-				 int cellSize = Integer.parseInt(result[2]);
-				String[] heights = Arrays.copyOfRange(result, 4, result.length);
-				matrix = buildMatrix(heights, start,cellSize);
-				mapDrawer.setHeightData(matrix); // painting
-				
-				
-				
-				reader.close();
+				csv.set(reader.readLine().split(","));
+				vm.buildMatrix();
 			} catch (IOException e) {}
 		}
 	}
-	
 
-	public Matrix buildMatrix(String[] dataFromCsv, Position start,int cellsize) {
-		int size = (int) Math.sqrt(dataFromCsv.length);
-		int[][] mat = new int[size][size];
-		int c = 0;
-		for (int i = 0; i < mat.length; i++) {
-			for (int j = 0; j < mat[i].length; j++) {
-				mat[i][j] = Integer.parseInt(dataFromCsv[c++]);
-			}
-		}
-		return new Matrix(mat, start, null);
-
-	}
 	
-	public void closeFromMenuBarClicked(ActionEvent e) {
-		// to implement
-		//Stage window = (Stage)this.getScene().getWindow();
-		//window.close();
+	public void closeFromMenuBarClicked() {
+		javafx.application.Platform.exit();
+		System.exit(0);
 	}
 
 	public void calculatePathClicked() {
@@ -311,6 +305,10 @@ public class MainWindowController extends Window implements Initializable, Obser
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		propertyMat = new Property<>();
+		csv = new Property<>();
+		ipInput = new Property<>();
+		portInput = new Property<>();
 		manual.setSelected(true);
 		manualFlag = true;
 		throttleSlider.setMin(0);
@@ -345,7 +343,16 @@ public class MainWindowController extends Window implements Initializable, Obser
 
 	@Override
 	public void update(Observable o, Object arg) {
-		onAirplanePositionChange();
+		String data = (String)arg;
+		if(data.equals("airplane")) {
+			airplanePosX = vm.airplanePosX.get();
+			airplanePosY = vm.airplanePosY.get();
+			onAirplanePositionChange();
+		}
+		if(data.equals("matrix")) {
+			mapDrawer.setHeightData(propertyMat.get()); //painting
+		}
+		
 	}
 
 }

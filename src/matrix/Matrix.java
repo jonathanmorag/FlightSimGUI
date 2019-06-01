@@ -15,7 +15,9 @@ public class Matrix {
 		this.entrance = entrance;
 		this.exit = exit;
 	}
-
+	public void setEntrance(Position entrance) {
+		this.entrance = entrance;
+	}
 	public Position getEntrance() {
 		return entrance;
 	}

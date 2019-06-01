@@ -5,7 +5,7 @@ import java.util.List;
 import algorithms_interface.State;
 
 public class MatrixConverter { // MatrixConvertor // 2Way Convertoer // Parser // BI Directional Parser
-	static MatrixSearchable problemToMatrixSearchable(List<String> problem) {
+	public static MatrixSearchable problemToMatrixSearchable(List<String> problem) {
 		int numOfRows = problem.size() - 3;
 		int numofCols = problem.get(0).split(",").length;
 		int[][] data = new int[numOfRows][numofCols];
@@ -24,7 +24,7 @@ public class MatrixConverter { // MatrixConvertor // 2Way Convertoer // Parser /
 		return new MatrixSearchable(new Matrix(data, enter, exit));
 	}
 
-	static List<String> backtraceToSolution(List<State<Position>> bt) {
+	public static List<String> backtraceToSolution(List<State<Position>> bt) {
 
 		List<String> solution = new ArrayList<String>();
 		for (int i = 0; i < bt.size() - 1; i++) {
