@@ -1,4 +1,4 @@
-package Models;
+package models;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class AirplaneListenerModel extends Observable {
 	public void start() throws Exception {
 		new Thread(() -> {
 			try {
-				System.out.println("Server is open and waiting for clients . . . ");
+//				System.out.println("Server is open and waiting for clients . . . ");
 				runServer();
 			} catch (Exception e) {
 				stop = true;
@@ -62,7 +62,6 @@ public class AirplaneListenerModel extends Observable {
 					BufferedReader userInput = new BufferedReader(new InputStreamReader(aClient.getInputStream()));
 					while (true) {
 						String[] tempCoo = userInput.readLine().split(","); // 32.0131110,34.8752310
-						System.out.println(startCooX +" , "+ startCooY);
 						airplanePosition = PositionConverter.convert(
 								Double.parseDouble(tempCoo[0]),Double.parseDouble(tempCoo[1]),startCooX, startCooY);
 						setChanged();

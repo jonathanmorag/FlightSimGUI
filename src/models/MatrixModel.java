@@ -1,4 +1,4 @@
-package Models;
+package models;
 
 import server_side.Solver;
 
@@ -16,17 +16,17 @@ import algorithms_interface.Searcher;
 import algorithms_interface.State;
 
 public class MatrixModel extends Observable implements Solver<List<String>, String> {
-	
+
 	Matrix resultMatrix;
 	double startCoordinateX;
 	double startCoordinateY;
 	PrintWriter outToSolver;
 	BufferedReader in;
-	
+
 	public Matrix getMatrix() {
 		return resultMatrix;
 	}
-	
+
 	public void buildMatrix(String[] csv) {
 		int size = (int) Math.sqrt(csv.length);
 		startCoordinateX = Double.parseDouble(csv[0]);
@@ -40,51 +40,57 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 				mat[i][j] = Integer.parseInt(csv[c++]);
 			}
 		}
-		resultMatrix = new Matrix(mat, new Position(0,0), null);
+		resultMatrix = new Matrix(mat, new Position(0, 0), null);
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	public double getStartCooX() {
 		return startCoordinateX;
 	}
+
 	public double getStartCooY() {
 		return startCoordinateY;
 	}
+
 	public void connect(String ip, int port) {
+		Socket server = null;
 		try {
-			Socket server = new Socket(ip, port);
-			 in = new BufferedReader(new InputStreamReader(server.getInputStream()));
+			server = new Socket(ip, port);
+			in = new BufferedReader(new InputStreamReader(server.getInputStream()));
 			outToSolver = new PrintWriter(server.getOutputStream());
 		} catch (IOException e) {}
 		System.out.println("Connected to a solver server.");
 	}
-	
+	public void setStartPosition(Position start) {
+		resultMatrix.setEntrance(start);
+	}
 	public void setExitPosition(Position exit) {
 		resultMatrix.setExit(exit);
 	}
-	
+
 	public void requestSolution() {
-		if(outToSolver==null) {
+		if (outToSolver == null) {
 			System.out.println("you are not connected to a solver.");
 			return;
 		}
 		String[] problem = ConvertToProblem(this.resultMatrix);
-		for(String s : problem){
+		for (String s : problem) {
 			outToSolver.println(s);
 			outToSolver.flush();
 		}
 		outToSolver.println("end");
 		outToSolver.flush();
-		outToSolver.println("0,0");
+		outToSolver.println(resultMatrix.getEntrance().row + "," + resultMatrix.getEntrance().col);
 		outToSolver.flush();
-		outToSolver.println(resultMatrix.getExit().row+","+resultMatrix.getExit().col);
+		outToSolver.println(resultMatrix.getExit().row + "," + resultMatrix.getExit().col);
 		outToSolver.flush();
-			try {
-				System.out.println("Shortest path: " + in.readLine());
-			} catch (IOException e) {}
+		try {
+			System.out.println("Shortest path: " + in.readLine());
+		} catch (IOException e) {
+		}
 	}
-	
+
 	public String[] ConvertToProblem(Matrix matrix) {
 		String[] problem = new String[matrix.getData().length];
 		StringBuilder sb = new StringBuilder();
@@ -96,31 +102,30 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 		}
 		return problem;
 	}
-	
-	
-    @Override
-    public String solve(List<String> problem) {
 
-        Searcher<Position> BestFSsearcher = new BestFirstSearch<>();
-        List<State<Position>> bt = BestFSsearcher.search(MatrixConverter.problemToMatrixSearchable(problem));
-        
-        List<String> sol= MatrixConverter.backtraceToSolution(bt);
-        StringBuilder sb = new StringBuilder();
-        sol.forEach(s -> sb.append(s+","));
-        return sb.substring(0, sb.length() - 1).toString();
-    }
-    
+	@Override
+	public String solve(List<String> problem) {
+
+		Searcher<Position> BestFSsearcher = new BestFirstSearch<>();
+		List<State<Position>> bt = BestFSsearcher.search(MatrixConverter.problemToMatrixSearchable(problem));
+
+		List<String> sol = MatrixConverter.backtraceToSolution(bt);
+		StringBuilder sb = new StringBuilder();
+		sol.forEach(s -> sb.append(s + ","));
+		return sb.substring(0, sb.length() - 1).toString();
+	}
+
 	public static void getSolutionAndSum(List<State<Position>> bt) {
-		
+
 		StringBuilder sb = new StringBuilder();
 		bt.forEach(s -> sb.append(s + " -> "));
 		System.out.println(sb.toString().substring(0, sb.length() - 3));
-		//Collections.reverse(bt);
+		// Collections.reverse(bt);
 		List<String> solution = MatrixConverter.backtraceToSolution(bt);
 		sb.delete(0, sb.length());
 		solution.forEach(s -> sb.append(s + ", "));
 		System.out.println(sb.toString().substring(0, sb.length() - 2));
 		System.out.println("Total Sum is: " + bt.get(bt.size() - 1).getCost());
 	}
-	
+
 }

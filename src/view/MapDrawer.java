@@ -58,13 +58,15 @@ public class MapDrawer extends Canvas {
 			for(int j=0;j<heightData[0].length;j++) {
 					gc.setFill(setColor(heightData[i][j]));
 					gc.fillRect(j*w,i*h, w, h);
+//					gc.setFill(Color.GRAY);							//show values on map
+//					gc.fillText(String.valueOf(heightData[i][j]),j*w, i*h);
 					if(i==toDrawRow && j==toDrawCol)
 					{
 						gc.drawImage(destination,j*w,i*h,w,h);  	//draw destination X
 					}
 			}
 		}
-		gc.drawImage(airplane,aCol*w,aRow*h,2*w,2*h);					//draw Airplane
+		gc.drawImage(airplane,aCol*w,aRow*h,2*w,2*h);				//draw Airplane
 		}
 		
 	}

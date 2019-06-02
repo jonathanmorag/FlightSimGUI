@@ -1,2 +1,3 @@
+var throttle = 1
+print throttle
 print "done"
-return 2

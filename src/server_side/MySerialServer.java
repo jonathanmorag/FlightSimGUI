@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.Scanner;
 
 
 public class MySerialServer implements Server {
@@ -20,7 +19,7 @@ public class MySerialServer implements Server {
 	public void start(ClientHandler ch) throws Exception {
 	new Thread(() -> {
 			try {
-				System.out.println("Server is open and waiting for Clients . . . ");
+				System.out.println("Server is open, waiting for problems to solve. . . ");
 				runServer(port, ch);
 			} catch (Exception e) {
 				stop = true;
@@ -38,14 +37,18 @@ public class MySerialServer implements Server {
 	private void runServer(int port, ClientHandler ch) throws Exception {
 		ServerSocket server = new ServerSocket(port);
 		server.setSoTimeout(1000);
+		int i=0;
 
 		while (!stop) {
 			try {
 				Socket aClient = server.accept(); // Client connected successfully
-				//System.out.println("Client " + aClient.getRemoteSocketAddress() + " is now Connected . . . ");
+				System.out.println("Client " + aClient.getRemoteSocketAddress() + " is now Connected . . . ");
 				// System.out.flush();
 				try {
-					ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
+					while(!stop) {
+						System.out.println("handling request #"+ i++);
+						ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
+					}
 					aClient.close();
 				} catch (IOException e) {
 					// e.printStackTrace();

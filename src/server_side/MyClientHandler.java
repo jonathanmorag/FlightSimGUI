@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import Models.MatrixModel;
+import models.MatrixModel;
 
 public class MyClientHandler implements ClientHandler { //Client Handler that handles Strings inversions only
 	
@@ -56,10 +56,6 @@ public class MyClientHandler implements ClientHandler { //Client Handler that ha
 			outToUser.println(answer);
 			outToUser.flush();
 		} catch (IOException e1) { e1.printStackTrace(); }
-		try {
-			userInput.close();
-		} catch (IOException e) { e.printStackTrace(); }
-		outToUser.close();
 	}
 
 	

@@ -3,16 +3,19 @@ package view;
 import java.util.Observable;
 import java.util.Observer;
 
-import Models.AirplaneListenerModel;
-import Models.ConnectModel;
-import Models.MatrixModel;
-import Models.Property;
+import interpreter.Interpreter;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import matrix.Matrix;
 import matrix.Position;
+import models.AirplaneListenerModel;
+import models.ConnectModel;
+import models.MatrixModel;
+import models.Property;
 
 public class ViewModel extends Observable implements Observer {
 	
@@ -28,8 +31,10 @@ public class ViewModel extends Observable implements Observer {
 	public Property<Matrix> propertyMat;
 	public Property<String[]> csv;
 	
-	public Property<Position> exitPos;
+	public StringProperty fileName;
 	
+	public Property<Position> startPos;
+	public Property<Position> exitPos;
 	//controls
 	public DoubleProperty aileron;
 	public DoubleProperty elevator;
@@ -50,6 +55,8 @@ public class ViewModel extends Observable implements Observer {
 		airplanePosX = new SimpleIntegerProperty();
 		airplanePosY = new SimpleIntegerProperty();
 		
+		fileName = new SimpleStringProperty();
+		
 		//controls
 		aileron = new SimpleDoubleProperty();
 		elevator = new SimpleDoubleProperty();
@@ -62,12 +69,8 @@ public class ViewModel extends Observable implements Observer {
 		portSim = new Property<>();
 		ipSolver = new Property<>();
 		portSolver = new Property<>();
+		startPos = new Property<>();
 		exitPos = new Property<>();
-		
-		
-		//solverIP = new SimpleStringProperty();
-		//solverPort = new SimpleIntegerProperty();
-		//...
 	}
 	
 	//send values to simulator
@@ -103,12 +106,17 @@ public class ViewModel extends Observable implements Observer {
 		matrixModel.connect(ipSolver.get(), Integer.parseInt(portSolver.get()));
 	}
 	
+	public void interpret() {
+		Interpreter i = new Interpreter();
+		i.interpret(i.lexer(fileName.get()));
+	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o == airplaneModel) {
-			this.airplanePosX.set(airplaneModel.getAirplanePosition().col);
+			this.airplanePosX.set(airplaneModel.getAirplanePosition().col); //live airplane's location
 			this.airplanePosY.set(airplaneModel.getAirplanePosition().row);
+			matrixModel.setStartPosition(new Position(airplanePosX.get(),airplanePosY.get()));
 			setChanged();
 			notifyObservers("airplane");
 		}
@@ -120,5 +128,6 @@ public class ViewModel extends Observable implements Observer {
 			notifyObservers("matrix");
 		}
 	}
+
 
 }
