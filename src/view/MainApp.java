@@ -18,6 +18,7 @@ public class MainApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			primaryStage.setTitle("FlightGear Simulator GUI Application");
 			primaryStage.getIcons().add(new Image("file:resources/App_icon2.png"));
 			AirplaneListenerModel alm = new AirplaneListenerModel(5500);
 			MatrixModel matModel = new MatrixModel();
@@ -29,7 +30,7 @@ public class MainApp extends Application {
 			FXMLLoader fxl = new FXMLLoader();
 			MainWindowController mwc;
 			BorderPane root = fxl.load(getClass().getResource("MainWindow.fxml").openStream());
-			Scene scene = new Scene(root,800,600);
+			Scene scene = new Scene(root,800,700);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			mwc = fxl.getController();
 			mwc.setViewModel(vm);

@@ -40,6 +40,9 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.Reflection;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.input.MouseEvent;
 import matrix.Matrix;
 import matrix.Position;
@@ -228,16 +231,22 @@ public class MainWindowController extends Window implements Initializable, Obser
 	}
 
 	public void radioButtonClicked() {
+		Reflection ref = new Reflection();
+		ref.setInput(new SepiaTone());
 		tg = new ToggleGroup();
 		manual.setToggleGroup(tg);
 		auto.setToggleGroup(tg);
 		if (tg.getSelectedToggle().equals(manual)) {
+			manual.setEffect(ref);
+			auto.setEffect(null);
 			System.out.println("Manual Pilot mode is now Activated");
 			manualFlag = true;
 			autoFlag = false;
 		}
 		if (tg.getSelectedToggle().equals(auto)) // Autopilot
-		{
+		{	
+			manual.setEffect(null);
+			auto.setEffect(ref);
 			manualFlag = false;
 			autoFlag = true;
 			FileChooser fc = new FileChooser();
@@ -323,6 +332,10 @@ public class MainWindowController extends Window implements Initializable, Obser
 		exitPos = new Property<>();
 		fileName = new SimpleStringProperty();
 		manual.setSelected(true);
+		auto.setEffect(null);
+		Reflection ref = new Reflection();
+		ref.setInput(new SepiaTone());
+		manual.setEffect(ref);
 		manualFlag = true;
 		throttleSlider.setMin(0);
 		throttleSlider.setMax(1);
