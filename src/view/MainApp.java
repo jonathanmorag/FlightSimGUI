@@ -6,6 +6,7 @@ import models.AirplaneListenerModel;
 import models.ConnectModel;
 import models.MatrixModel;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.fxml.FXMLLoader;
 
@@ -17,6 +18,7 @@ public class MainApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			primaryStage.getIcons().add(new Image("file:resources/App_icon2.png"));
 			AirplaneListenerModel alm = new AirplaneListenerModel(5500);
 			MatrixModel matModel = new MatrixModel();
 			ConnectModel conModel = new ConnectModel();

@@ -19,6 +19,8 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,9 +28,12 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -111,25 +116,36 @@ public class MainWindowController extends Window implements Initializable, Obser
 	}
 
 	public void connectClicked() {
-		TextField ipInput;
-		TextField portInput;
-		Stage commentWindow = new Stage();
-		VBox box = new VBox(20);
+		Stage window = new Stage();
+		GridPane grid = new GridPane();
+		TextField ipInput = new TextField();
+		TextField portInput = new TextField();
 		Label ipCommentlabel = new Label("Enter FlightGear simulator's IP:");
-		ipInput = new TextField();
 		Label portCommentlabel = new Label("Enter FlightGear simulator's Port:");
-		portInput = new TextField();
 		Button b = new Button("Connect");
-		box.getChildren().addAll(ipCommentlabel, ipInput, portCommentlabel, portInput, b);
-		commentWindow.setScene(new Scene(box, 350, 250));
-		commentWindow.show();
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(25, 25, 25, 25));
+		Text connect = new Text("Connect");
+		connect.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		grid.add(connect, 0, 0);
+		grid.add(ipCommentlabel, 0, 1);
+		grid.add(ipInput, 1, 1);
+		grid.add(portCommentlabel, 0, 2);
+		grid.add(portInput, 1, 2);
+		HBox hbButton = new HBox(10);
+		hbButton.setAlignment(Pos.BOTTOM_CENTER);
+		hbButton.getChildren().add(b);
+		grid.add(hbButton, 1, 4);
+		window.setScene(new Scene(grid, 400, 250));
+		window.show();
 		b.setOnAction(e -> {
 			this.ipSim.set(ipInput.getText());
 			this.portSim.set(portInput.getText());
-			commentWindow.close();
+			window.close();
 			vm.connectToSimulator();
 		});
-
 	}
 
 	public void onAirplanePositionChange() {
@@ -158,20 +174,34 @@ public class MainWindowController extends Window implements Initializable, Obser
 	}
 
 	public void calculatePathClicked() {
-		Stage commentWindow = new Stage();
-		VBox box = new VBox(20);
-		Label ipCommentlabel = new Label("Enter IP of a solver server");
+		Stage window = new Stage();
+		GridPane grid = new GridPane();
 		TextField ipInput = new TextField();
-		Label portCommentlabel = new Label("Enter Port of a solver server");
 		TextField portInput = new TextField();
+		Label ipCommentlabel = new Label("Enter IP of a solver server:");
+		Label portCommentlabel = new Label("Enter Port of a solver server:");
 		Button b = new Button("Connect");
-		box.getChildren().addAll(ipCommentlabel, ipInput, portCommentlabel, portInput, b);
-		commentWindow.setScene(new Scene(box, 350, 250));
-		commentWindow.show();
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(25, 25, 25, 25));
+		Text connect = new Text("Calculate Path");
+		connect.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		grid.add(connect, 0, 0);
+		grid.add(ipCommentlabel, 0, 1);
+		grid.add(ipInput, 1, 1);
+		grid.add(portCommentlabel, 0, 2);
+		grid.add(portInput, 1, 2);
+		HBox hbButton = new HBox(10);
+		hbButton.setAlignment(Pos.BOTTOM_CENTER);
+		hbButton.getChildren().add(b);
+		grid.add(hbButton, 1, 4);
+		window.setScene(new Scene(grid, 400, 250));
+		window.show();
 		b.setOnAction(e -> {
 			ipSolver.set(ipInput.getText());
 			portSolver.set(portInput.getText());
-			commentWindow.close();
+			window.close();
 			vm.connectToSolver();
 		});
 	}
@@ -319,6 +349,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		}
 		if (data.equals("matrix")) {
 			mapDrawer.setHeightData(propertyMat.get()); // painting map
+			mapDrawer.setCursor(Cursor.HAND);
 		}
 
 	}

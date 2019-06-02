@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<?import view.MapDrawer?>
+<?import view.MapDrawer?> 
 
-<BorderPane prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
+<BorderPane prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #3d495f;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -23,9 +23,7 @@
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></MapDrawer>
+                    </MapDrawer>
                   <Group translateX="40.0" translateY="60.0">
                      <children>
                         <Circle fx:id="outerCircle" fill="#E0E0E0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
@@ -48,22 +46,22 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Slider>
-                        <Label layoutX="-167.0" layoutY="-13.0" rotate="-90.0" text="throttle">
+                        <Label layoutX="-167.0" layoutY="-13.0" rotate="-90.0" text="throttle" textFill="#bbbbbb">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="-27.0" layoutY="120.0" text="rudder">
+                        <Label layoutX="-27.0" layoutY="120.0" text="rudder" textFill="#bbbbbb">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="-42.0" layoutY="-133.0" text="⮜aileron⮞">
+                        <Label layoutX="-46.0" layoutY="-131.0" text="⮜ aileron ⮞" textFill="#bbbbbb">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="71.0" layoutY="-13.0" rotate="90.0" text="⮜elevator⮞">
+                        <Label layoutX="71.0" layoutY="-14.0" rotate="90.0" text="⮜ elevator ⮞" textFill="#bbbbbb">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -94,43 +92,52 @@
             </MenuBar>
             <HBox maxHeight="54.0" prefHeight="30.0" prefWidth="505.0" spacing="12.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#connectClicked" text="Connect">
+                  <Button mnemonicParsing="false" onAction="#connectClicked" prefHeight="25.0" prefWidth="120.0" text="Connect">
                      <HBox.margin>
-                        <Insets left="25.0" />
+                        <Insets left="2.0" />
                      </HBox.margin>
                      <cursor>
                         <Cursor fx:constant="HAND" />
-                     </cursor></Button>
-                  <Button mnemonicParsing="false" onAction="#loadDataClicked" text="Load data">
+                     </cursor>
+                     <font>
+                        <Font name="Century Gothic" size="13.0" />
+                     </font></Button>
+                  <Button mnemonicParsing="false" onAction="#loadDataClicked" prefHeight="25.0" prefWidth="120.0" text="Load data">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <HBox.margin>
-                        <Insets left="25.0" />
-                     </HBox.margin></Button>
-                  <Button mnemonicParsing="false" onAction="#calculatePathClicked" text="Calculate path ">
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="Century Gothic" size="13.0" />
+                     </font></Button>
+                  <Button mnemonicParsing="false" onAction="#calculatePathClicked" prefHeight="25.0" prefWidth="120.0" text="Calculate path ">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <HBox.margin>
-                        <Insets left="25.0" />
-                     </HBox.margin></Button>
-                  <RadioButton fx:id="auto" mnemonicParsing="false" onAction="#radioButtonClicked" prefHeight="25.0" prefWidth="271.0" text="Autopilot">
+                        <Insets />
+                     </HBox.margin>
+                     <font>
+                        <Font name="Century Gothic" size="13.0" />
+                     </font></Button>
+                  <RadioButton fx:id="auto" mnemonicParsing="false" onAction="#radioButtonClicked" prefHeight="25.0" prefWidth="193.0" text="Autopilot" textFill="#bbbbbb">
                      <font>
                         <Font size="16.0" />
                      </font>
                      <HBox.margin>
-                        <Insets />
+                        <Insets bottom="10.0" />
                      </HBox.margin>
                      <padding>
-                        <Insets left="135.0" />
+                        <Insets left="80.0" />
                      </padding></RadioButton>
-                  <RadioButton fx:id="manual" mnemonicParsing="false" onAction="#radioButtonClicked" text="Manual">
+                  <RadioButton fx:id="manual" mnemonicParsing="false" onAction="#radioButtonClicked" text="Manual" textFill="#bbbbbb">
                      <font>
                         <Font size="16.0" />
                      </font>
                      <HBox.margin>
-                        <Insets />
+                        <Insets left="5.0" />
                      </HBox.margin></RadioButton>
                </children>
                <VBox.margin>
@@ -139,13 +146,13 @@
             </HBox>
          </children>
          <BorderPane.margin>
-            <Insets />
+           	<Insets />
          </BorderPane.margin>
       </VBox>
    </top>
    <bottom>
    </bottom>
    <bottom>
-      <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #e0e0e0;" BorderPane.alignment="CENTER" />
    </bottom>
 </BorderPane>

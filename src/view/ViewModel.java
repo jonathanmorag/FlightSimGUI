@@ -22,8 +22,7 @@ public class ViewModel extends Observable implements Observer {
 	MatrixModel matrixModel;
 	AirplaneListenerModel airplaneModel;
 	ConnectModel connectModel;
-	
-	
+		
 	//properties
 	public IntegerProperty airplanePosX;
 	public IntegerProperty airplanePosY;
