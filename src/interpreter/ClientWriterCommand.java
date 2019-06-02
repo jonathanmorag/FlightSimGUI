@@ -29,8 +29,10 @@ public class ClientWriterCommand implements Command {
 				}
 			
 			String data = "set " + Interpreter.varToPath.get(parsed[0]) + " " + parsed[2]; // x = bind simX
-			out.println(data);
-			out.flush();			
+			if(out != null) {
+				out.println(data);
+				out.flush();	
+			}
 		}
 	}
 }

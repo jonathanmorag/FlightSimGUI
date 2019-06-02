@@ -74,7 +74,7 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 			System.out.println("you are not connected to a solver.");
 			return;
 		}
-		String[] problem = ConvertToProblem(this.resultMatrix);
+		String[] problem = convertToProblem(resultMatrix);
 		for (String s : problem) {
 			outToSolver.println(s);
 			outToSolver.flush();
@@ -91,7 +91,7 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 		}
 	}
 
-	public String[] ConvertToProblem(Matrix matrix) {
+	public String[] convertToProblem(Matrix matrix) {
 		String[] problem = new String[matrix.getData().length];
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < matrix.getData().length; i++) {

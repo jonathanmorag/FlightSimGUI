@@ -15,17 +15,18 @@ public class ConnectModel extends Observable {
 			server = new Socket(ip, port);
 			System.out.println("Client is connected to a remote Server.");
 			outToSim = new PrintWriter(server.getOutputStream());
-		} catch (IOException e) {
-		}
+		} catch (IOException e) {}
 	}
 
-	public void sendCommandToSimulator(String cmd, Double new_val) {
+	public void sendCommandToSimulator(String cmd, double new_val) {
 		if (outToSim != null) {
 			outToSim.flush();
 			outToSim.println(cmd + new_val);
 			outToSim.flush();
 		}
-		else {System.out.println("you are not connected to the simulator.");}
+		else {
+			System.out.println("you are not connected to the simulator.");
+		}
 	}
 
 }

@@ -1,3 +1,7 @@
-var throttle = 1
-print throttle
+openDataServer 5400 10
+connect 127.0.0.1 5402
+var throttle = bind "/controls/engines/current-engine/throttle"
+var rudder = -0.3
+sleep 10000
+throttle = 1
 print "done"

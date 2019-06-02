@@ -2,9 +2,7 @@ package interpreter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Interpreter {
@@ -31,14 +29,10 @@ public class Interpreter {
 	}
 	
 	public String[] lexer(String fileName) {
-		List<String> lines = new ArrayList<>();
 		try {
-			Files.lines(Paths.get("./resources/"+fileName)).forEach(fileLine -> {
-				lines.add(fileLine);
-			});
+			return Files.lines(Paths.get("./resources/"+fileName)).toArray(String[]::new);
 		} catch (IOException e) {}
-
-		return lines.stream().toArray(String[]::new);
+		return null;
 	}
 
 	/*

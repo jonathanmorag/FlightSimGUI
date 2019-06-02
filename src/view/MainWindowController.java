@@ -70,7 +70,6 @@ public class MainWindowController extends Window implements Initializable, Obser
 	public DoubleProperty aileron;
 	public Property<String> ipSim;
 	public Property<String> portSim;
-//	public Property<Position> startPos;
 	public Property<Position> exitPos;
 	// ----------------------------------------
 
@@ -175,44 +174,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 			commentWindow.close();
 			vm.connectToSolver();
 		});
-
-//		if(server==null) {
-//			commentWindow.setScene(new Scene(box, 350, 250));
-//			commentWindow.show();
-//		}
-//		else
-//			sendDataToSolver();
 	}
 
-//	private void sendDataToSolver() {
-//		try {
-//			server = new Socket(solverIP, solverPort);
-//			System.out.println("Connected to a solver server.");
-//			BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
-//			outToSolver = new PrintWriter(server.getOutputStream());
-
-	// convert matrix to a problem
-//			for (int i = 0; i < matrix.getData().length; i++) {
-//				StringBuilder sb = new StringBuilder();
-//				for (int j = 0; j < matrix.getData()[0].length; j++) {
-//					sb.append(matrix.getData()[i][j] + ",");
-//				}
-//				outToSolver.println(sb.substring(0, sb.length() - 1).toString());
-//				outToSolver.flush();
-//			}
-//			ConvertToProblem(matrix);
-//			outToSolver.println("end");
-//			outToSolver.flush();
-//			outToSolver.println("0,0");
-//			outToSolver.flush();
-//			out.println("8,8");
-	// out.println(myData.getEntrance().row+","+myData.getEntrance().col);
-//			outToSolver.println(matrix.getExit().row+","+matrix.getExit().col);
-//			outToSolver.flush();
-//
-//			System.out.println(in.readLine());
-//		} catch (IOException e) {} 
-//	}
 
 	public void aboutClicked() {
 		Stage window = new Stage();
@@ -284,9 +247,9 @@ public class MainWindowController extends Window implements Initializable, Obser
 
 			// boudaries check
 			if (!outerCircle.contains(innerCircle.getCenterX(), innerCircle.getCenterY())) {
+			//System.out.println(innerCircle.getCenterX());
 				return;
 			}
-//			System.out.println(innerCircle.getCenterX());
 
 			// sending orders to sim
 			elevator.set(innerCircle.getCenterY() / (-100));
@@ -308,10 +271,12 @@ public class MainWindowController extends Window implements Initializable, Obser
 	}
 
 	public void mapClicked(MouseEvent e) {
-//			System.out.println("X: " + (e.getSceneX()-5) + "Y: " + (e.getSceneY()-60));
-		exitPos.set(mapDrawer.setRoute((e.getSceneX() - 5), (e.getSceneY() - 60)));
-		vm.setExitPosition();
-		vm.requestSolution();
+		//System.out.println("X: " + (e.getSceneX()-5) + "Y: " + (e.getSceneY()-60));
+		if(mapDrawer.heightData!=null) {
+			exitPos.set(mapDrawer.setRoute((e.getSceneX() - 5), (e.getSceneY() - 60)));
+			vm.setExitPosition();
+			vm.requestSolution();
+		}
 	}
 
 	@Override
@@ -324,7 +289,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		portSolver = new Property<>();
 		elevator = new SimpleDoubleProperty();
 		aileron = new SimpleDoubleProperty();
-//		startPos = new Property<>();
+		//startPos = new Property<>();
 		exitPos = new Property<>();
 		fileName = new SimpleStringProperty();
 		manual.setSelected(true);
@@ -350,7 +315,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		if (data.equals("airplane")) {
 			airplanePosX = vm.airplanePosX.get();
 			airplanePosY = vm.airplanePosY.get();
-			onAirplanePositionChange(); // painting airplane
+			onAirplanePositionChange(); 				// painting airplane
 		}
 		if (data.equals("matrix")) {
 			mapDrawer.setHeightData(propertyMat.get()); // painting map
