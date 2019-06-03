@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<?import view.MapDrawer?>
+<!-- <?import view.MapDrawer?> -->
 
 <BorderPane prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #3d495f;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <center>
@@ -19,11 +19,11 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <MapDrawer fx:id="mapDrawer" height="400.0" onMouseClicked="#mapClicked" width="400.0">
+                  <Canvas fx:id="mapDrawer" height="400.0" onMouseClicked="#mapClicked" width="400.0">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
-                    </MapDrawer>
+                    </Canvas>
                   <Group translateX="40.0" translateY="60.0">
                      <children>
                         <Circle fill="#282828" onMouseDragged="#innerDragged" onMousePressed="#innerPressed" onMouseReleased="#innerReleased" radius="38.0" stroke="BLACK">
@@ -47,14 +47,14 @@
                            </effect></Circle> 
                         <Slider fx:id="rudderSlider" layoutX="-70.0" layoutY="106.0">
                            <cursor>
-                              <Cursor fx:constant="CROSSHAIR" />
+                              <Cursor fx:constant="OPEN_HAND" />
                            </cursor></Slider>
                         <Slider fx:id="throttleSlider" layoutX="-124.0" layoutY="-69.0" orientation="VERTICAL">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                            <cursor>
-                              <Cursor fx:constant="CROSSHAIR" />
+                              <Cursor fx:constant="OPEN_HAND" />
                            </cursor>
                         </Slider>
                         <Label layoutX="-164.0" layoutY="-11.0" rotate="-90.0" text="throttle" textFill="#bbbbbb">

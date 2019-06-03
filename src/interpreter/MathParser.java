@@ -5,8 +5,10 @@ import shuntingYard.Q3;
 
 public class MathParser {
 	public static void parse(String[] expression) {
-
+		
+		
 		double val = 0;
+		boolean minusFlag = false;
 		String[] newExp = Arrays.copyOfRange(expression, 2, expression.length); // (h0 - heading)/20
 		StringBuilder sb = new StringBuilder();
 		String var = "";
@@ -27,7 +29,24 @@ public class MathParser {
 				sb.append(newExp[i]);
 		}
 	//	System.out.println("Expression is: " + sb.toString() + " and the final result is: " + Q3.calc(sb.toString()));
-		val = Q3.calc(sb.toString());
+		String res = null;
+		if(sb.charAt(0) == '-') {
+			res = sb.substring(1, sb.length());
+			minusFlag = true;
+		}
+		if(minusFlag) {
+			if(res.charAt(0) == '-'){ //if stars with - - 
+				res = res.substring(1, res.length());
+				val = Q3.calc(res);	
+			}
+			else
+				val = Q3.calc(res)*-1;
+		}
+		else
+		{
+			val = Q3.calc(sb.toString());
+		}
+		
 		Interpreter.symTable.put(expression[0], val);
 		//System.out.println("var's val is: " + Interpreter.symTable.get(expression[0]));
 

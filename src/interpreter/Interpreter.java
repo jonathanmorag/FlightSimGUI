@@ -28,7 +28,7 @@ public class Interpreter {
 		return new Parser().parse(lines);
 	}
 	
-	public String[] lexer(String fileName) {
+	public static String[] lexer(String fileName) {
 		try {
 			return Files.lines(Paths.get("./resources/"+fileName)).toArray(String[]::new);
 		} catch (IOException e) {}
@@ -56,5 +56,10 @@ public class Interpreter {
 		
 		symTable.entrySet().forEach(e -> System.out.println("line in symTable : " + e.getKey() + " " + e.getValue()));
 	} */
+	
+	public static void main(String[] args) {
+		Interpreter i = new Interpreter();
+		i.interpret(lexer("inputFromSimulator.txt"));
+	}
 
 }

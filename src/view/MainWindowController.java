@@ -16,6 +16,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -40,9 +41,12 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.Reflection;
 import javafx.scene.effect.SepiaTone;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import matrix.Matrix;
 import matrix.Position;
@@ -123,9 +127,20 @@ public class MainWindowController extends Window implements Initializable, Obser
 		GridPane grid = new GridPane();
 		TextField ipInput = new TextField();
 		TextField portInput = new TextField();
-		Label ipCommentlabel = new Label("Enter FlightGear simulator's IP:");
-		Label portCommentlabel = new Label("Enter FlightGear simulator's Port:");
+		Label ipCommentlabel = new Label("FlightGear simulator's IP:");
+		Label portCommentlabel = new Label("FlightGear simulator's Port:");
 		Button b = new Button("Connect");
+		b.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				b.setEffect(new DropShadow());
+			}});
+		b.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				b.setEffect(null);
+			}});
+//		b.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("FlightGear_Logo.png"))));
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);
