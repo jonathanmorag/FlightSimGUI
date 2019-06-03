@@ -347,6 +347,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		portSolver = new Property<>();
 		elevator = new SimpleDoubleProperty();
 		aileron = new SimpleDoubleProperty();
+		curAirplaneLocation = new Position(0, 0);
 		//startPos = new Property<>();
 		exitPos = new Property<>();
 		fileName = new SimpleStringProperty();

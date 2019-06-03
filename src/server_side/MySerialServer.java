@@ -37,16 +37,12 @@ public class MySerialServer implements Server {
 	private void runServer(int port, ClientHandler ch) throws Exception {
 		ServerSocket server = new ServerSocket(port);
 		server.setSoTimeout(1000);
-		int i=0;
 
 		while (!stop) {
 			try {
 				Socket aClient = server.accept(); // Client connected successfully
-				System.out.println("Client " + aClient.getRemoteSocketAddress() + " is now Connected . . . ");
-				// System.out.flush();
 				try {
 					while(!stop) {
-						System.out.println("handling request #"+ i++);
 						ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
 					}
 					aClient.close();
@@ -56,11 +52,6 @@ public class MySerialServer implements Server {
 			} catch (SocketTimeoutException e) {
 				// e.printStackTrace();
 			}
-
-			// Closing sources...
-
-			// aClient.getInputStream().close();
-			// aClient.getOutputStream().close();
 
 		}
 		server.close();

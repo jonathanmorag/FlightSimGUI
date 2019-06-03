@@ -20,7 +20,8 @@ public class MapDrawer extends Canvas {
 	int aRow;
 	int toDrawRow;
 	int toDrawCol;
-	List<Position> points;
+	List<Position> points = new ArrayList<>();
+	boolean paintFlag;
 	
 	public void setHeightData(Matrix m) {
 		heightData = m.getData();
@@ -48,7 +49,7 @@ public class MapDrawer extends Canvas {
 			double H = getHeight();
 			double w = W / heightData[0].length;
 			double h = H / heightData.length;
-
+			int itr=0;
 			GraphicsContext gc = getGraphicsContext2D();
 			Image airplane = null;
 			Image destination = null;
@@ -71,14 +72,21 @@ public class MapDrawer extends Canvas {
 					if (i == toDrawRow && j == toDrawCol) {
 						gc.drawImage(destination, j * w, i * h, w, h); // draw destination X
 					}
-					for(Position p : points) {
-						if(p.row == i && p.col == j)
-							gc.drawImage(path, j * w, i * h, w, h);
+					if(paintFlag) {
+						for(Position p : points) {
+							if(p.row == j && p.col == i) {
+//								gc.setFill(Color.BLACK);
+//								gc.fillRect(j * w, i * h, w, h);
+								gc.drawImage(path, j * w, i * h, w, h);
+							}
+						}
 					}
 				}
 			}
 			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h); // draw Airplane
 		}
+		paintFlag=false;
+		points.clear();
 
 	}
 
@@ -122,21 +130,34 @@ public class MapDrawer extends Canvas {
 	}
 
 	public void paintPath(String shortestPath, Position current) {
-		System.out.println(shortestPath);
+		// System.out.println(shortestPath);
 		String[] steps = shortestPath.split(",");
-		points = new ArrayList<>();
+		Position prev = current;
+		// points = new ArrayList<>();
 		for(String s: steps) {
-			if(s.equals("Right") ) 
-				points.add(new Position(current.row, current.col + 1));
-			if (s.equals("Down")) 
-				points.add(new Position(current.row + 1, current.col));
-			if (s.equals("Left")) 
-				points.add(new Position(current.row, current.col - 1));
-			if (s.equals("Up")) 
-				points.add(new Position(current.row - 1, current.col + 1));
+			if(s.equals("Right")) 
+			{
+				prev = new Position(prev.row + 1, prev.col);
+				points.add(prev);
+			}
+			if (s.equals("Down")) {
+				prev = new Position(prev.row, prev.col + 1);
+				points.add(prev);
+			}
+			if (s.equals("Left")) {
+				prev = new Position(prev.row - 1, prev.col);
+				points.add(prev);
+			}
+				
+			if (s.equals("Up")) {
+				prev = new Position(prev.row, prev.col - 1);
+				points.add(prev);
+			}
 			// (0,1) -> (0,2) -> (1,2) -> (2,2)
 		}
 		points.remove(points.size()-1);
+		paintFlag = true;
+		redraw();
 	}
 
 }

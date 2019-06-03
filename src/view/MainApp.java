@@ -1,10 +1,14 @@
 package view;
 	
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import models.AirplaneListenerModel;
 import models.ConnectModel;
 import models.MatrixModel;
+import server_side.MyClientHandler;
+import server_side.MySerialServer;
+import server_side.Server;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -46,7 +50,18 @@ public class MainApp extends Application {
 	}
 	
 	public static void main(String[] args) {
-		launch(args);
+
+		
+		Server s = null;
+		try {
+			s= new MySerialServer(1234);
+			s.start(new MyClientHandler());
+			launch(args);
+		} catch (Exception e) {}
+		finally {
+			Platform.exit();
+			System.exit(0);
+		}
 	}
 	
 }
