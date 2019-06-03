@@ -136,11 +136,13 @@ public class MainWindowController extends Window implements Initializable, Obser
 		b.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				b.setCursor(Cursor.HAND);
 				b.setEffect(new DropShadow());
 			}});
 		b.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				b.setCursor(null);
 				b.setEffect(null);
 			}});
 //		b.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("FlightGear_Logo.png"))));
@@ -218,6 +220,18 @@ public class MainWindowController extends Window implements Initializable, Obser
 		hbButton.setAlignment(Pos.BOTTOM_CENTER);
 		hbButton.getChildren().add(b);
 		grid.add(hbButton, 1, 4);
+		b.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				b.setCursor(Cursor.HAND);
+				b.setEffect(new DropShadow());
+			}});
+		b.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				b.setCursor(null);
+				b.setEffect(null);
+			}});
 		window.setScene(new Scene(grid, 400, 250));
 		window.show();
 		b.setOnAction(e -> {
@@ -326,6 +340,10 @@ public class MainWindowController extends Window implements Initializable, Obser
 	public void innerReleased(MouseEvent e) {
 		innerCircle.setCenterX(0);
 		innerCircle.setCenterY(0);
+		elevator.set(0);
+		vm.sendElevatorValues();
+		aileron.set(0);
+		vm.sendAileronValues();
 	}
 
 	public void mapClicked(MouseEvent e) {
@@ -333,7 +351,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		if(mapDrawer.heightData!=null) {
 			exitPos.set(mapDrawer.setRoute((e.getSceneX() - 5), (e.getSceneY() - 60)));
 			vm.setExitPosition();
-			vm.requestSolution();
+			vm.calculatePath();
 		}
 	}
 

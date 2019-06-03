@@ -99,8 +99,8 @@ public class ViewModel extends Observable implements Observer {
 		connectModel.connect(ipSim.get(), Integer.parseInt(portSim.get()));
 	}
 	
-	public void requestSolution() {
-		matrixModel.requestSolution();
+	public void calculatePath() {
+		matrixModel.calculatePath();
 	}
 	public void connectToSolver() {
 		matrixModel.connect(ipSolver.get(), Integer.parseInt(portSolver.get()));

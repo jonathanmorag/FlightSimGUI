@@ -23,7 +23,7 @@ public class MainApp extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("FlightGear Simulator GUI Application");
-			primaryStage.getIcons().add(new Image("file:resources/App_icon2.png"));
+			primaryStage.getIcons().add(new Image("file:resources/images/App_icon.png"));
 			AirplaneListenerModel alm = new AirplaneListenerModel(5500);
 			MatrixModel matModel = new MatrixModel();
 			ConnectModel conModel = new ConnectModel();

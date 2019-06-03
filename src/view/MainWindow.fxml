@@ -24,7 +24,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                     </MapDrawer>
-                  <Group translateX="40.0" translateY="60.0">
+                  <Group translateX="50.0" translateY="60.0" HBox.hgrow="NEVER">
                      <children>
                         <Circle fill="#282828" onMouseDragged="#innerDragged" onMousePressed="#innerPressed" onMouseReleased="#innerReleased" radius="38.0" stroke="BLACK">
                            <cursor>
@@ -103,7 +103,7 @@
             </MenuBar>
             <HBox maxHeight="54.0" prefHeight="30.0" prefWidth="505.0" spacing="12.0">
                <children>
-                  <Button id="shiny-orange" mnemonicParsing="false" onAction="#connectClicked" prefHeight="25.0" prefWidth="120.0" text="Connect">
+                  <Button mnemonicParsing="false" onAction="#connectClicked" prefHeight="25.0" prefWidth="120.0" text="Connect">
                      <HBox.margin>
                         <Insets left="2.0" />
                      </HBox.margin>

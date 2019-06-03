@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.beans.property.StringProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -49,15 +48,15 @@ public class MapDrawer extends Canvas {
 			double H = getHeight();
 			double w = W / heightData[0].length;
 			double h = H / heightData.length;
-			int itr=0;
+			
 			GraphicsContext gc = getGraphicsContext2D();
 			Image airplane = null;
 			Image destination = null;
 			Image path = null;
 			try {
-				airplane = new Image(new FileInputStream("./resources/Airplane3.png"));
-				destination = new Image(new FileInputStream("./resources/Destination.png"));
-				path = new Image(new FileInputStream("./resources/path.png"));
+				airplane = new Image(new FileInputStream("./resources/images/Airplane.png"));
+				destination = new Image(new FileInputStream("./resources/images/Destination2.png"));
+				path = new Image(new FileInputStream("./resources/images/Path.png"));
 			} catch (FileNotFoundException e) {
 				System.out.println("file not found");
 			}
@@ -72,7 +71,7 @@ public class MapDrawer extends Canvas {
 					if (i == toDrawRow && j == toDrawCol) {
 						gc.drawImage(destination, j * w, i * h, w, h); // draw destination X
 					}
-					if(paintFlag) {
+//					if(paintFlag) {
 						for(Position p : points) {
 							if(p.row == j && p.col == i) {
 //								gc.setFill(Color.BLACK);
@@ -80,12 +79,12 @@ public class MapDrawer extends Canvas {
 								gc.drawImage(path, j * w, i * h, w, h);
 							}
 						}
-					}
+//					}
 				}
 			}
 			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h); // draw Airplane
 		}
-		paintFlag=false;
+//		paintFlag=false;
 		points.clear();
 
 	}
@@ -156,7 +155,7 @@ public class MapDrawer extends Canvas {
 			// (0,1) -> (0,2) -> (1,2) -> (2,2)
 		}
 		points.remove(points.size()-1);
-		paintFlag = true;
+//		paintFlag = true;
 		redraw();
 	}
 

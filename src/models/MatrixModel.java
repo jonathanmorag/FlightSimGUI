@@ -73,9 +73,10 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 		return shortestPath;
 	}
 	
-	public void requestSolution() {
+	public void calculatePath() {
 		if (outToSolver == null) {
 			System.out.println("you are not connected to a solver.");
+			return;
 		}
 		String[] problem = convertToProblem(resultMatrix);
 		for (String s : problem) {
