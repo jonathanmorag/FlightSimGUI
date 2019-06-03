@@ -22,6 +22,7 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 	double startCoordinateY;
 	PrintWriter outToSolver;
 	BufferedReader in;
+	String shortestPath;
 
 	public Matrix getMatrix() {
 		return resultMatrix;
@@ -42,7 +43,7 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 		}
 		resultMatrix = new Matrix(mat, new Position(0, 0), null);
 		setChanged();
-		notifyObservers();
+		notifyObservers("matrix");
 	}
 
 	public double getStartCooX() {
@@ -68,11 +69,13 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 	public void setExitPosition(Position exit) {
 		resultMatrix.setExit(exit);
 	}
-
+	public String getShortestPath() {
+		return shortestPath;
+	}
+	
 	public void requestSolution() {
 		if (outToSolver == null) {
 			System.out.println("you are not connected to a solver.");
-			return;
 		}
 		String[] problem = convertToProblem(resultMatrix);
 		for (String s : problem) {
@@ -86,9 +89,10 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 		outToSolver.println(resultMatrix.getExit().row + "," + resultMatrix.getExit().col);
 		outToSolver.flush();
 		try {
-			System.out.println("Shortest path: " + in.readLine());
-		} catch (IOException e) {
-		}
+			shortestPath = in.readLine();
+			setChanged();
+			notifyObservers("shortest path");
+		} catch (IOException e) {}
 	}
 
 	public String[] convertToProblem(Matrix matrix) {

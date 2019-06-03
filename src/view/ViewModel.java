@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import matrix.Matrix;
 import matrix.Position;
 import models.AirplaneListenerModel;
@@ -46,6 +47,7 @@ public class ViewModel extends Observable implements Observer {
 	//connect button
 	public Property<String> ipSim;
 	public Property<String> portSim;
+	public StringProperty shortestPath;
 	
 	public ViewModel(MatrixModel matrixModel ,AirplaneListenerModel airplaneModel, ConnectModel connectModel) {
 		this.matrixModel = matrixModel;
@@ -53,7 +55,7 @@ public class ViewModel extends Observable implements Observer {
 		this.connectModel = connectModel;
 		airplanePosX = new SimpleIntegerProperty();
 		airplanePosY = new SimpleIntegerProperty();
-		
+		shortestPath = new SimpleStringProperty();
 		fileName = new SimpleStringProperty();
 		
 		//controls
@@ -107,11 +109,12 @@ public class ViewModel extends Observable implements Observer {
 	
 	public void interpret() {
 		Interpreter i = new Interpreter();
-		i.interpret(i.lexer(fileName.get()));
+		i.interpret(Interpreter.lexer(fileName.get()));
 	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
+		String data = (String)arg;
 		if (o == airplaneModel) {
 			this.airplanePosX.set(airplaneModel.getAirplanePosition().col); //live airplane's location
 			this.airplanePosY.set(airplaneModel.getAirplanePosition().row);
@@ -120,11 +123,20 @@ public class ViewModel extends Observable implements Observer {
 			notifyObservers("airplane");
 		}
 		if (o == matrixModel) {
-			propertyMat.set(matrixModel.getMatrix());
-			airplaneModel.setStartCooX(matrixModel.getStartCooX());
-			airplaneModel.setStartCooY(matrixModel.getStartCooY());
-			setChanged();
-			notifyObservers("matrix");
+			if(data.equals("matrix"))
+			{
+				propertyMat.set(matrixModel.getMatrix());
+				airplaneModel.setStartCooX(matrixModel.getStartCooX());
+				airplaneModel.setStartCooY(matrixModel.getStartCooY());
+				setChanged();
+				notifyObservers("matrix");
+			}
+			if(data.equals("shortest path"))
+			{
+				this.shortestPath.set(matrixModel.getShortestPath());
+				setChanged();
+				notifyObservers("shortest path");
+			}
 		}
 	}
 

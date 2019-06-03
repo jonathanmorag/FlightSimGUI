@@ -1,6 +1,5 @@
 package interpreter;
 
-import javafx.beans.binding.StringBinding;
 
 public class DeclareVarCommand implements Command {// y=x+3
 	

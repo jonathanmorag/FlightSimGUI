@@ -88,6 +88,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 	// ----------------solver------------------
 	public Property<String> ipSolver;
 	public Property<String> portSolver;
+	public StringProperty shortestPath;
 	// ----------------------------------------
 
 	// -------------properties-----------------
@@ -99,6 +100,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 	double orgSceneY;
 	boolean manualFlag;
 	boolean autoFlag;
+	Position curAirplaneLocation;
 	Matrix matrix;
 
 	int airplanePosX;
@@ -107,7 +109,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 	// define bindings
 	public void setViewModel(ViewModel vm) {
 		this.vm = vm;
-		propertyMat.bindTo(vm.propertyMat);
+		this.propertyMat.bindTo(vm.propertyMat);
+		this.shortestPath.bind(vm.shortestPath);
 		vm.csv.bindTo(this.csv);
 		vm.ipSim.bindTo(this.ipSim);
 		vm.portSim.bindTo(this.portSim);
@@ -167,7 +170,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 	}
 
 	public void onAirplanePositionChange() {
-		mapDrawer.setAirplanePosition(new Position(airplanePosX, airplanePosY));
+		curAirplaneLocation = new Position(airplanePosX, airplanePosY);
+		mapDrawer.setAirplanePosition(curAirplaneLocation);
 	}
 
 	public void loadDataClicked() {
@@ -346,6 +350,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		//startPos = new Property<>();
 		exitPos = new Property<>();
 		fileName = new SimpleStringProperty();
+		shortestPath = new SimpleStringProperty();
 		manual.setSelected(true);
 		auto.setEffect(null);
 		Reflection ref = new Reflection();
@@ -374,6 +379,9 @@ public class MainWindowController extends Window implements Initializable, Obser
 			airplanePosX = vm.airplanePosX.get();
 			airplanePosY = vm.airplanePosY.get();
 			onAirplanePositionChange(); 				// painting airplane
+		}
+		if (data.equals("shortest path")) {
+			mapDrawer.paintPath(shortestPath.get(),curAirplaneLocation);
 		}
 		if (data.equals("matrix")) {
 			mapDrawer.setHeightData(propertyMat.get()); // painting map

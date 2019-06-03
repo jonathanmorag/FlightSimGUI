@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<!-- <?import view.MapDrawer?> -->
+<?import view.MapDrawer?>
 
 <BorderPane prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #3d495f;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainWindowController">
    <center>
@@ -19,11 +19,11 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Canvas fx:id="mapDrawer" height="400.0" onMouseClicked="#mapClicked" width="400.0">
+                  <MapDrawer fx:id="mapDrawer" height="400.0" onMouseClicked="#mapClicked" width="400.0">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
-                    </Canvas>
+                    </MapDrawer>
                   <Group translateX="40.0" translateY="60.0">
                      <children>
                         <Circle fill="#282828" onMouseDragged="#innerDragged" onMousePressed="#innerPressed" onMouseReleased="#innerReleased" radius="38.0" stroke="BLACK">

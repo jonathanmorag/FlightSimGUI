@@ -2,7 +2,10 @@ package view;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javafx.beans.property.StringProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -17,7 +20,8 @@ public class MapDrawer extends Canvas {
 	int aRow;
 	int toDrawRow;
 	int toDrawCol;
-
+	List<Position> points;
+	
 	public void setHeightData(Matrix m) {
 		heightData = m.getData();
 		redraw();
@@ -48,10 +52,11 @@ public class MapDrawer extends Canvas {
 			GraphicsContext gc = getGraphicsContext2D();
 			Image airplane = null;
 			Image destination = null;
+			Image path = null;
 			try {
 				airplane = new Image(new FileInputStream("./resources/Airplane3.png"));
 				destination = new Image(new FileInputStream("./resources/Destination.png"));
-//				img = new Image("https://www.javelin-tech.com/blog/wp-content/uploads/2013/03/Starship1.png");
+				path = new Image(new FileInputStream("./resources/path.png"));
 			} catch (FileNotFoundException e) {
 				System.out.println("file not found");
 			}
@@ -65,6 +70,10 @@ public class MapDrawer extends Canvas {
 //					gc.fillText(String.valueOf(heightData[i][j]),j*w, i*h);
 					if (i == toDrawRow && j == toDrawCol) {
 						gc.drawImage(destination, j * w, i * h, w, h); // draw destination X
+					}
+					for(Position p : points) {
+						if(p.row == i && p.col == j)
+							gc.drawImage(path, j * w, i * h, w, h);
 					}
 				}
 			}
@@ -110,6 +119,24 @@ public class MapDrawer extends Canvas {
 		}
 
 		return null;
+	}
+
+	public void paintPath(String shortestPath, Position current) {
+		System.out.println(shortestPath);
+		String[] steps = shortestPath.split(",");
+		points = new ArrayList<>();
+		for(String s: steps) {
+			if(s.equals("Right") ) 
+				points.add(new Position(current.row, current.col + 1));
+			if (s.equals("Down")) 
+				points.add(new Position(current.row + 1, current.col));
+			if (s.equals("Left")) 
+				points.add(new Position(current.row, current.col - 1));
+			if (s.equals("Up")) 
+				points.add(new Position(current.row - 1, current.col + 1));
+			// (0,1) -> (0,2) -> (1,2) -> (2,2)
+		}
+		points.remove(points.size()-1);
 	}
 
 }
