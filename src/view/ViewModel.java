@@ -22,6 +22,7 @@ public class ViewModel extends Observable implements Observer {
 	MatrixModel matrixModel;
 	AirplaneListenerModel airplaneModel;
 	ConnectModel connectModel;
+	Interpreter interpreterModel;
 		
 	//properties
 	public IntegerProperty airplanePosX;
@@ -107,8 +108,8 @@ public class ViewModel extends Observable implements Observer {
 	}
 	
 	public void interpret() {
-		Interpreter i = new Interpreter();
-		i.interpret(Interpreter.lexer(fileName.get()));
+		interpreterModel = new Interpreter();
+		interpreterModel.interpret(interpreterModel.lex(fileName.get()));
 	}
 	
 	@Override

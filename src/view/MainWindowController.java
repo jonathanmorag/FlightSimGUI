@@ -58,6 +58,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 	PrintWriter outToSolver;
 
 	@FXML
+	TextArea logScreen;
+	@FXML
 	MapDrawer mapDrawer;
 	@FXML
 	RadioButton manual;
@@ -188,6 +190,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 				reader = new BufferedReader(new FileReader(selectedFile));
 				csv.set(reader.readLine().split(","));
 				vm.buildMatrix();
+				logScreen.appendText("Map loaded succesfully.");
 			} catch (IOException e) {}
 		}
 	}
@@ -272,7 +275,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		if (tg.getSelectedToggle().equals(manual)) {
 			manual.setEffect(ref);
 			auto.setEffect(null);
-			System.out.println("Manual Pilot mode is now Activated");
+			logScreen.setText("Manual Pilot mode is now Activated");
 			manualFlag = true;
 			autoFlag = false;
 		}
@@ -297,7 +300,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 				fileName.setValue(selectedFile.getName());
 				vm.interpret();
 			} catch (FileNotFoundException e) {}
-			System.out.println("Autopilot mode is now Activated");
+			logScreen.appendText("Autopilot mode is now Activated");
 		}
 	}
 
@@ -313,14 +316,14 @@ public class MainWindowController extends Window implements Initializable, Obser
 
 	public void innerDragged(MouseEvent e) {
 		if (manualFlag) {
-//			System.out.println("(" + orgSceneX + "," + orgSceneY + ")"); //printing x and y 
+			//System.out.println("(" + orgSceneX + "," + orgSceneY + ")"); //printing x and y 
 			double offsetX = e.getSceneX() - orgSceneX;
 			double offsetY = e.getSceneY() - orgSceneY;
 
 			// boudaries check
 			if (!outerCircle.contains(innerCircle.getCenterX(), innerCircle.getCenterY())) {
 			//System.out.println(innerCircle.getCenterX());
-				return;
+				return ;
 			}
 
 			// sending orders to sim
@@ -352,6 +355,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 			exitPos.set(mapDrawer.setRoute((e.getSceneX() - 5), (e.getSceneY() - 60)));
 			vm.setExitPosition();
 			vm.calculatePath();
+			logScreen.appendText("Displaying shortest path");
 		}
 	}
 

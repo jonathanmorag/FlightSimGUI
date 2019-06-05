@@ -78,15 +78,14 @@ public class MapDrawer extends Canvas {
 //								gc.fillRect(j * w, i * h, w, h);
 								gc.drawImage(path, j * w, i * h, w, h);
 							}
-						}
+						}System.out.println("after path loop");
 //					}
 				}
 			}
 			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h); // draw Airplane
 		}
 //		paintFlag=false;
-		points.clear();
-
+		
 	}
 
 	private Color setColor(int value) {
@@ -130,6 +129,7 @@ public class MapDrawer extends Canvas {
 
 	public void paintPath(String shortestPath, Position current) {
 		// System.out.println(shortestPath);
+		points.clear();
 		String[] steps = shortestPath.split(",");
 		Position prev = current;
 		// points = new ArrayList<>();
@@ -157,6 +157,7 @@ public class MapDrawer extends Canvas {
 		points.remove(points.size()-1);
 //		paintFlag = true;
 		redraw();
+		
 	}
 
 }

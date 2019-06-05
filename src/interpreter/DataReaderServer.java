@@ -21,10 +21,14 @@ public class DataReaderServer {
 	public void runServer() {
 		try {
 			ServerSocket server = new ServerSocket(port);
+			System.out.println("Server is alive and waiting for connection...");
 			Socket client = server.accept();
 			System.out.println("Client has connected to my Server.");
 			String cLine;
-			String[] varNames = { "simX", "simY", "simZ" };
+			String[] varNames = { "airspeed", "alt", "Pressure", "pitch", "roll", "Internal-Pitch", "Internal-Roll",
+					"Encoder-Altitude", "Encoder-Pressure", "GPS-Altitude", "Ground-Speed", "Vertical-Speed",
+					"heading", "Compass-Heading", "Slip", "Turn", "Fpm-Speed", "aileron", "elevator", "rudder",
+					"Flaps", "throttle", "Rpm" };
 			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			while (!stop) {
 				cLine = in.readLine();

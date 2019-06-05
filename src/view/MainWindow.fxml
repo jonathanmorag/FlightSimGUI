@@ -77,6 +77,14 @@
                               <Font name="Century Gothic" size="18.0" />
                            </font>
                         </Label>
+                        <TextArea fx:id="logScreen" layoutX="-101.0" layoutY="178.0" prefHeight="40.0" prefWidth="200.0" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="TEXT" />
+                           </cursor>
+                           <effect>
+                              <ColorAdjust brightness="-0.16" contrast="0.07" hue="0.35" saturation="0.16" />
+                           </effect>
+                        </TextArea>
                      </children>
                   </Group>
                </children>
@@ -103,9 +111,9 @@
             </MenuBar>
             <HBox maxHeight="54.0" prefHeight="30.0" prefWidth="505.0" spacing="12.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#connectClicked" prefHeight="25.0" prefWidth="120.0" text="Connect">
+                  <Button mnemonicParsing="false" onAction="#connectClicked" prefHeight="25.0" prefWidth="125.0" text="Connect">
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets left="-5.0" />
                      </HBox.margin>
                      <cursor>
                         <Cursor fx:constant="HAND" />
@@ -113,7 +121,7 @@
                      <font>
                         <Font name="Century Gothic" size="13.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" onAction="#loadDataClicked" prefHeight="25.0" prefWidth="120.0" text="Load data">
+                  <Button mnemonicParsing="false" onAction="#loadDataClicked" prefHeight="25.0" prefWidth="125.0" text="Load data">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -123,7 +131,7 @@
                      <font>
                         <Font name="Century Gothic" size="13.0" />
                      </font></Button>
-                  <Button mnemonicParsing="false" onAction="#calculatePathClicked" prefHeight="25.0" prefWidth="120.0" text="Calculate path ">
+                  <Button mnemonicParsing="false" onAction="#calculatePathClicked" prefHeight="25.0" prefWidth="125.0" text="Calculate path ">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -170,7 +178,7 @@
    <bottom>
    </bottom>
    <bottom>
-      <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #838080;" BorderPane.alignment="CENTER">
+      <TextArea fx:id="textArea" prefHeight="212.0" prefWidth="800.0" style="-fx-border-color: #838080;" BorderPane.alignment="CENTER">
          <effect>
             <ColorAdjust brightness="-0.1" />
          </effect>

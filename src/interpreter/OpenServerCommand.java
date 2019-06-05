@@ -21,8 +21,6 @@ public class OpenServerCommand implements Command {
 				notifier.wait();
 			} catch (InterruptedException e) {}
 		}
-		System.out.println("Server is alive and waiting for clients...");
-		
 	}
 
 } 

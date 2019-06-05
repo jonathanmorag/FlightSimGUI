@@ -28,7 +28,7 @@ public class Interpreter {
 		return new Parser().parse(lines);
 	}
 	
-	public static String[] lexer(String fileName) {
+	public String[] lex(String fileName) {
 		try {
 			return Files.lines(Paths.get("./resources/"+fileName)).toArray(String[]::new);
 		} catch (IOException e) {}
@@ -59,7 +59,7 @@ public class Interpreter {
 	
 	public static void main(String[] args) {
 		Interpreter i = new Interpreter();
-		i.interpret(lexer("inputFromSimulator.txt"));
+		i.interpret(i.lex("inputFromSimulator.txt"));
 	}
 
 }
