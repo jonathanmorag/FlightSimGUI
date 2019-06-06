@@ -12,7 +12,9 @@ import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -42,11 +44,8 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.effect.Reflection;
 import javafx.scene.effect.SepiaTone;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import matrix.Matrix;
 import matrix.Position;
@@ -73,6 +72,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 	Circle innerCircle;
 	@FXML
 	ToggleGroup tg;
+	JoystickController joystick;
 
 	// --------------simulator-----------------
 	// controls
@@ -97,7 +97,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 	public Property<Matrix> propertyMat;
 	public Property<String[]> csv;
 	public StringProperty fileName;
-	
+	public BooleanProperty isConnectedToSolver;
+
 	double orgSceneX;
 	double orgSceneY;
 	boolean manualFlag;
@@ -113,6 +114,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		this.vm = vm;
 		this.propertyMat.bindTo(vm.propertyMat);
 		this.shortestPath.bind(vm.shortestPath);
+		this.isConnectedToSolver.bind(vm.isConnectedToSolver);
 		vm.csv.bindTo(this.csv);
 		vm.ipSim.bindTo(this.ipSim);
 		vm.portSim.bindTo(this.portSim);
@@ -125,9 +127,11 @@ public class MainWindowController extends Window implements Initializable, Obser
 		vm.throttle.bind(this.throttleSlider.valueProperty());
 		vm.aileron.bind(this.aileron);
 		vm.elevator.bind(this.elevator);
+
 	}
 
 	public void connectClicked() {
+		boolean valid = false;
 		Stage window = new Stage();
 		GridPane grid = new GridPane();
 		TextField ipInput = new TextField();
@@ -135,18 +139,14 @@ public class MainWindowController extends Window implements Initializable, Obser
 		Label ipCommentlabel = new Label("FlightGear simulator's IP:");
 		Label portCommentlabel = new Label("FlightGear simulator's Port:");
 		Button b = new Button("Connect");
-		b.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				b.setCursor(Cursor.HAND);
-				b.setEffect(new DropShadow());
-			}});
-		b.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				b.setCursor(null);
-				b.setEffect(null);
-			}});
+		b.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+			b.setCursor(Cursor.HAND);
+			b.setEffect(new DropShadow());
+		});
+		b.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
+			b.setCursor(null);
+			b.setEffect(null);
+		});
 //		b.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("FlightGear_Logo.png"))));
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
@@ -166,10 +166,14 @@ public class MainWindowController extends Window implements Initializable, Obser
 		window.setScene(new Scene(grid, 400, 250));
 		window.show();
 		b.setOnAction(e -> {
-			this.ipSim.set(ipInput.getText());
-			this.portSim.set(portInput.getText());
-			window.close();
-			vm.connectToSimulator();
+			if(ipSim.get() != null && portSim.get() !=null) {
+				this.ipSim.set(ipInput.getText());
+				this.portSim.set(portInput.getText());
+				vm.connectToSimulator();
+				window.close();
+			}
+			else
+				logScreen.appendText("Invalid parameters.\n");
 		});
 	}
 
@@ -190,8 +194,9 @@ public class MainWindowController extends Window implements Initializable, Obser
 				reader = new BufferedReader(new FileReader(selectedFile));
 				csv.set(reader.readLine().split(","));
 				vm.buildMatrix();
-				logScreen.appendText("Map loaded succesfully.");
-			} catch (IOException e) {}
+				logScreen.appendText("Map loaded succesfully.\n");
+			} catch (IOException e) {
+			}
 		}
 	}
 
@@ -223,28 +228,26 @@ public class MainWindowController extends Window implements Initializable, Obser
 		hbButton.setAlignment(Pos.BOTTOM_CENTER);
 		hbButton.getChildren().add(b);
 		grid.add(hbButton, 1, 4);
-		b.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				b.setCursor(Cursor.HAND);
-				b.setEffect(new DropShadow());
-			}});
-		b.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				b.setCursor(null);
-				b.setEffect(null);
-			}});
+		b.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+			b.setCursor(Cursor.HAND);
+			b.setEffect(new DropShadow());
+		});
+		b.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+			b.setCursor(null);
+			b.setEffect(null);
+		});
 		window.setScene(new Scene(grid, 400, 250));
 		window.show();
 		b.setOnAction(e -> {
+			if(ipSolver.get() != null && portSolver.get() !=null) {
 			ipSolver.set(ipInput.getText());
 			portSolver.set(portInput.getText());
-			window.close();
 			vm.connectToSolver();
+			window.close();
+			}
+			logScreen.appendText("Invalid parameters.\n");
 		});
 	}
-
 
 	public void aboutClicked() {
 		Stage window = new Stage();
@@ -275,12 +278,12 @@ public class MainWindowController extends Window implements Initializable, Obser
 		if (tg.getSelectedToggle().equals(manual)) {
 			manual.setEffect(ref);
 			auto.setEffect(null);
-			logScreen.setText("Manual Pilot mode is now Activated");
+			logScreen.appendText("Manual Pilot mode is now Activated\n");
 			manualFlag = true;
 			autoFlag = false;
 		}
 		if (tg.getSelectedToggle().equals(auto)) // Autopilot
-		{	
+		{
 			manual.setEffect(null);
 			auto.setEffect(ref);
 			manualFlag = false;
@@ -299,68 +302,45 @@ public class MainWindowController extends Window implements Initializable, Obser
 				sc.close();
 				fileName.setValue(selectedFile.getName());
 				vm.interpret();
-			} catch (FileNotFoundException e) {}
-			logScreen.appendText("Autopilot mode is now Activated");
+			} catch (FileNotFoundException e) {
+			}
+			logScreen.appendText("Autopilot mode is now Activated\n");
 		}
 	}
 
 	public void innerPressed(MouseEvent e) {
 		if (manualFlag) {
-			innerCircle.setCenterX(0);
-			innerCircle.setCenterY(0);
-			orgSceneX = e.getSceneX();
-			orgSceneY = e.getSceneY();
-			innerCircle.toFront();
+			joystick.innerPressed(e);
 		}
 	}
 
 	public void innerDragged(MouseEvent e) {
 		if (manualFlag) {
-			//System.out.println("(" + orgSceneX + "," + orgSceneY + ")"); //printing x and y 
-			double offsetX = e.getSceneX() - orgSceneX;
-			double offsetY = e.getSceneY() - orgSceneY;
-
-			// boudaries check
-			if (!outerCircle.contains(innerCircle.getCenterX(), innerCircle.getCenterY())) {
-			//System.out.println(innerCircle.getCenterX());
-				return ;
-			}
-
-			// sending orders to sim
-			elevator.set(innerCircle.getCenterY() / (-100));
-			vm.sendElevatorValues();
-			aileron.set(innerCircle.getCenterX() / 100);
-			vm.sendAileronValues();
-
-			Circle c = (Circle) (e.getSource());
-			innerCircle.setCenterX(c.getCenterX() + offsetX);
-			innerCircle.setCenterY(c.getCenterY() + offsetY);
-			orgSceneX = e.getSceneX();
-			orgSceneY = e.getSceneY();
+			joystick.innerDragged(e);
 		}
 	}
 
 	public void innerReleased(MouseEvent e) {
-		innerCircle.setCenterX(0);
-		innerCircle.setCenterY(0);
-		elevator.set(0);
+		joystick.innerReleased(e);
 		vm.sendElevatorValues();
-		aileron.set(0);
 		vm.sendAileronValues();
 	}
 
 	public void mapClicked(MouseEvent e) {
-		//System.out.println("X: " + (e.getSceneX()-5) + "Y: " + (e.getSceneY()-60));
-		if(mapDrawer.heightData!=null) {
+		// System.out.println("X: " + (e.getSceneX()-5) + "Y: " + (e.getSceneY()-60));
+		if (mapDrawer.heightData != null) {
 			exitPos.set(mapDrawer.setRoute((e.getSceneX() - 5), (e.getSceneY() - 60)));
 			vm.setExitPosition();
 			vm.calculatePath();
-			logScreen.appendText("Displaying shortest path");
+			if (isConnectedToSolver.get()) {
+				logScreen.appendText("Displaying shortest path\n");
+			}
 		}
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		logScreen.setEditable(false);
 		propertyMat = new Property<>();
 		csv = new Property<>();
 		ipSim = new Property<>();
@@ -369,9 +349,11 @@ public class MainWindowController extends Window implements Initializable, Obser
 		portSolver = new Property<>();
 		elevator = new SimpleDoubleProperty();
 		aileron = new SimpleDoubleProperty();
+		isConnectedToSolver = new SimpleBooleanProperty();
 		curAirplaneLocation = new Position(0, 0);
-		//startPos = new Property<>();
+		// startPos = new Property<>();
 		exitPos = new Property<>();
+		joystick = new JoystickController(innerCircle, outerCircle, rudderSlider, throttleSlider, aileron, elevator);
 		fileName = new SimpleStringProperty();
 		shortestPath = new SimpleStringProperty();
 		manual.setSelected(true);
@@ -385,13 +367,13 @@ public class MainWindowController extends Window implements Initializable, Obser
 		rudderSlider.setMin(-1);
 		rudderSlider.setMax(1);
 
-		rudderSlider.valueProperty().addListener((ov,old_val,new_val)-> {
-				if (manualFlag) 
-					vm.sendRudderValues();
+		rudderSlider.valueProperty().addListener((ov, old_val, new_val) -> {
+			if (manualFlag)
+				vm.sendRudderValues();
 		});
-		throttleSlider.valueProperty().addListener((ov,old_val,new_val)-> {
-				if (manualFlag) 
-					vm.sendThrottleValues();
+		throttleSlider.valueProperty().addListener((ov, old_val, new_val) -> {
+			if (manualFlag)
+				vm.sendThrottleValues();
 		});
 	}
 
@@ -401,14 +383,18 @@ public class MainWindowController extends Window implements Initializable, Obser
 		if (data.equals("airplane")) {
 			airplanePosX = vm.airplanePosX.get();
 			airplanePosY = vm.airplanePosY.get();
-			onAirplanePositionChange(); 				// painting airplane
+			onAirplanePositionChange(); // painting airplane
 		}
 		if (data.equals("shortest path")) {
-			mapDrawer.paintPath(shortestPath.get(),curAirplaneLocation);
+			mapDrawer.paintPath(shortestPath.get(), curAirplaneLocation);
 		}
 		if (data.equals("matrix")) {
 			mapDrawer.setHeightData(propertyMat.get()); // painting map
 			mapDrawer.setCursor(Cursor.HAND);
+		}
+
+		if (data.equals("not connected")) {
+			logScreen.appendText("Not connected to a solver server.\n");
 		}
 
 	}

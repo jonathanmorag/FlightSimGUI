@@ -76,6 +76,8 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 	public void calculatePath() {
 		if (outToSolver == null) {
 			System.out.println("you are not connected to a solver.");
+			setChanged();
+			notifyObservers("not connected");
 			return;
 		}
 		String[] problem = convertToProblem(resultMatrix);

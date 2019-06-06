@@ -21,7 +21,7 @@ public class MapDrawer extends Canvas {
 	int toDrawCol;
 	List<Position> points = new ArrayList<>();
 	boolean paintFlag;
-	
+
 	public void setHeightData(Matrix m) {
 		heightData = m.getData();
 		redraw();
@@ -48,14 +48,14 @@ public class MapDrawer extends Canvas {
 			double H = getHeight();
 			double w = W / heightData[0].length;
 			double h = H / heightData.length;
-			
+
 			GraphicsContext gc = getGraphicsContext2D();
 			Image airplane = null;
 			Image destination = null;
 			Image path = null;
 			try {
 				airplane = new Image(new FileInputStream("./resources/images/Airplane.png"));
-				destination = new Image(new FileInputStream("./resources/images/Destination2.png"));
+				destination = new Image(new FileInputStream("./resources/images/Destination.png"));
 				path = new Image(new FileInputStream("./resources/images/Path.png"));
 			} catch (FileNotFoundException e) {
 				System.out.println("file not found");
@@ -66,26 +66,19 @@ public class MapDrawer extends Canvas {
 				for (int j = 0; j < heightData[0].length; j++) {
 					gc.setFill(setColor(heightData[i][j]));
 					gc.fillRect(j * w, i * h, w, h);
-//					gc.setFill(Color.GRAY);							//show values on map
-//					gc.fillText(String.valueOf(heightData[i][j]),j*w, i*h);
+//					gc.setFill(Color.DARKCYAN);							//draw values
+//					gc.fillText(" "+(heightData[i][j]), (j) * w, (i) * h);
 					if (i == toDrawRow && j == toDrawCol) {
-						gc.drawImage(destination, j * w, i * h, w, h); // draw destination X
+						gc.drawImage(destination, j * w, i * h, w, h);  // draw destination X
 					}
-//					if(paintFlag) {
-						for(Position p : points) {
-							if(p.row == j && p.col == i) {
-//								gc.setFill(Color.BLACK);
-//								gc.fillRect(j * w, i * h, w, h);
-								gc.drawImage(path, j * w, i * h, w, h);
-							}
-						}System.out.println("after path loop");
-//					}
 				}
 			}
-			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h); // draw Airplane
+			for (Position p : points) { 								// draw path
+				gc.drawImage(path, p.row * w, p.col * h, w, h);
+			}
+			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h);   // draw airplane
 		}
-//		paintFlag=false;
-		
+
 	}
 
 	private Color setColor(int value) {
@@ -133,9 +126,8 @@ public class MapDrawer extends Canvas {
 		String[] steps = shortestPath.split(",");
 		Position prev = current;
 		// points = new ArrayList<>();
-		for(String s: steps) {
-			if(s.equals("Right")) 
-			{
+		for (String s : steps) {
+			if (s.equals("Right")) {
 				prev = new Position(prev.row + 1, prev.col);
 				points.add(prev);
 			}
@@ -147,17 +139,17 @@ public class MapDrawer extends Canvas {
 				prev = new Position(prev.row - 1, prev.col);
 				points.add(prev);
 			}
-				
+
 			if (s.equals("Up")) {
 				prev = new Position(prev.row, prev.col - 1);
 				points.add(prev);
 			}
 			// (0,1) -> (0,2) -> (1,2) -> (2,2)
 		}
-		points.remove(points.size()-1);
+		points.remove(points.size() - 1);
 //		paintFlag = true;
 		redraw();
-		
+
 	}
 
 }

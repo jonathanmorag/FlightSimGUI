@@ -77,7 +77,7 @@
                               <Font name="Century Gothic" size="18.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="logScreen" layoutX="-101.0" layoutY="178.0" prefHeight="40.0" prefWidth="200.0" wrapText="true">
+                        <TextArea fx:id="logScreen" layoutX="-140.0" layoutY="158.0" prefHeight="45.0" prefWidth="280.0" wrapText="true">
                            <cursor>
                               <Cursor fx:constant="TEXT" />
                            </cursor>

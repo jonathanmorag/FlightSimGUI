@@ -4,8 +4,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import interpreter.Interpreter;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,6 +50,7 @@ public class ViewModel extends Observable implements Observer {
 	public Property<String> ipSim;
 	public Property<String> portSim;
 	public StringProperty shortestPath;
+	public BooleanProperty isConnectedToSolver;
 	
 	public ViewModel(MatrixModel matrixModel ,AirplaneListenerModel airplaneModel, ConnectModel connectModel) {
 		this.matrixModel = matrixModel;
@@ -72,6 +75,8 @@ public class ViewModel extends Observable implements Observer {
 		portSolver = new Property<>();
 		startPos = new Property<>();
 		exitPos = new Property<>();
+		
+		isConnectedToSolver = new SimpleBooleanProperty();
 	}
 	
 	//send values to simulator
@@ -123,19 +128,24 @@ public class ViewModel extends Observable implements Observer {
 			notifyObservers("airplane");
 		}
 		if (o == matrixModel) {
-			if(data.equals("matrix"))
-			{
+			if (data.equals("matrix")) {
 				propertyMat.set(matrixModel.getMatrix());
 				airplaneModel.setStartCooX(matrixModel.getStartCooX());
 				airplaneModel.setStartCooY(matrixModel.getStartCooY());
 				setChanged();
 				notifyObservers("matrix");
 			}
-			if(data.equals("shortest path"))
-			{
+			if (data.equals("shortest path")) {
 				this.shortestPath.set(matrixModel.getShortestPath());
+				this.isConnectedToSolver.set(true);
 				setChanged();
 				notifyObservers("shortest path");
+			}
+
+			if (data.equals("not connected")) {
+				this.isConnectedToSolver.set(false);
+				setChanged();
+				notifyObservers("not connected");
 			}
 		}
 	}
