@@ -44,7 +44,8 @@ public class JoystickController {
 
 			// boudaries check
 			if (outerCircle.contains(innerCircle.getCenterX(), innerCircle.getCenterY())) {
-//				System.out.println(innerCircle.getCenterX() +" " + innerCircle.getCenterY());
+				//System.out.println(innerCircle.getCenterX() +" " + innerCircle.getCenterY());
+				
 				// sending orders to sim
 				elevator.set(innerCircle.getCenterY() / (-100));
 				aileron.set(innerCircle.getCenterX() / 100);

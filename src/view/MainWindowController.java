@@ -166,13 +166,13 @@ public class MainWindowController extends Window implements Initializable, Obser
 		window.setScene(new Scene(grid, 400, 250));
 		window.show();
 		b.setOnAction(e -> {
-			if(ipSim.get() != null && portSim.get() !=null) {
+			if (!ipInput.getText().equals("") && !portInput.getText().equals("")) {
 				this.ipSim.set(ipInput.getText());
 				this.portSim.set(portInput.getText());
 				vm.connectToSimulator();
+				logScreen.appendText("Established connection to the simulator.\n");
 				window.close();
-			}
-			else
+			} else
 				logScreen.appendText("Invalid parameters.\n");
 		});
 	}
@@ -239,13 +239,15 @@ public class MainWindowController extends Window implements Initializable, Obser
 		window.setScene(new Scene(grid, 400, 250));
 		window.show();
 		b.setOnAction(e -> {
-			if(ipSolver.get() != null && portSolver.get() !=null) {
-			ipSolver.set(ipInput.getText());
-			portSolver.set(portInput.getText());
-			vm.connectToSolver();
-			window.close();
+			if (!ipInput.getText().equals("") && !portInput.getText().equals("")) {
+				ipSolver.set(ipInput.getText());
+				portSolver.set(portInput.getText());
+				vm.connectToSolver();
+				logScreen.appendText("Established connection to a solver server.\n");
+				window.close();
+			} else {
+				logScreen.appendText("Invalid parameters.\n");
 			}
-			logScreen.appendText("Invalid parameters.\n");
 		});
 	}
 
@@ -261,7 +263,6 @@ public class MainWindowController extends Window implements Initializable, Obser
 			Stage s = (Stage) b.getScene().getWindow();
 			s.close();
 		});
-		b.setTranslateY(40);
 		root.getChildren().addAll(t, b);
 		b.setPadding(new Insets(12));
 		t.setTranslateY(-15);
@@ -278,7 +279,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		if (tg.getSelectedToggle().equals(manual)) {
 			manual.setEffect(ref);
 			auto.setEffect(null);
-			logScreen.appendText("Manual Pilot mode is now Activated\n");
+			logScreen.appendText("Manual Mode Activated.\n");
 			manualFlag = true;
 			autoFlag = false;
 		}
@@ -293,7 +294,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 			fc.setInitialDirectory(new File("./resources"));
 			fc.setSelectedExtensionFilter(new ExtensionFilter("Text Files", "*.txt"));
 			File selectedFile = fc.showOpenDialog(this);
-			try {
+		try {
+			if(selectedFile!=null) {
 				Scanner sc = new Scanner(selectedFile); // display chosen file in text area
 				while (sc.hasNextLine()) {
 					textArea.appendText(sc.nextLine());
@@ -302,10 +304,12 @@ public class MainWindowController extends Window implements Initializable, Obser
 				sc.close();
 				fileName.setValue(selectedFile.getName());
 				vm.interpret();
-			} catch (FileNotFoundException e) {
 			}
-			logScreen.appendText("Autopilot mode is now Activated\n");
+		} catch (FileNotFoundException e) {
 		}
+		logScreen.appendText("Autopilot mode Activated.\n");
+	}
+
 	}
 
 	public void innerPressed(MouseEvent e) {
@@ -333,7 +337,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 			vm.setExitPosition();
 			vm.calculatePath();
 			if (isConnectedToSolver.get()) {
-				logScreen.appendText("Displaying shortest path\n");
+				logScreen.appendText("Displaying shortest path.\n");
 			}
 		}
 	}
@@ -394,7 +398,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		}
 
 		if (data.equals("not connected")) {
-			logScreen.appendText("Not connected to a solver server.\n");
+			logScreen.appendText("Please connect to a solver server.\n");
 		}
 
 	}

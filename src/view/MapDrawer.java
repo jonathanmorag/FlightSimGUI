@@ -22,7 +22,7 @@ public class MapDrawer extends Canvas {
 	List<Position> points = new ArrayList<>();
 	boolean paintFlag;
 
-	public void setHeightData(Matrix m) {
+	public void setHeightData(Matrix m) { //
 		heightData = m.getData();
 		redraw();
 	}
@@ -146,7 +146,7 @@ public class MapDrawer extends Canvas {
 			}
 			// (0,1) -> (0,2) -> (1,2) -> (2,2)
 		}
-		points.remove(points.size() - 1);
+//		points.remove(points.size() - 1);
 //		paintFlag = true;
 		redraw();
 
