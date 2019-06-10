@@ -18,7 +18,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -55,7 +54,6 @@ public class MainWindowController extends Window implements Initializable, Obser
 
 	ViewModel vm;
 	PrintWriter outToSolver;
-
 	@FXML
 	TextArea logScreen;
 	@FXML
@@ -80,8 +78,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 	Slider rudderSlider;
 	@FXML
 	Slider throttleSlider;
-	public DoubleProperty elevator;
-	public DoubleProperty aileron;
+	
 	public Property<String> ipSim;
 	public Property<String> portSim;
 	public Property<Position> exitPos;
@@ -114,7 +111,15 @@ public class MainWindowController extends Window implements Initializable, Obser
 		this.vm = vm;
 		this.propertyMat.bindTo(vm.propertyMat);
 		this.shortestPath.bind(vm.shortestPath);
+		
 		this.isConnectedToSolver.bind(vm.isConnectedToSolver);
+		
+		// bind MWC controls to VM controls
+		vm.rudder.bind(this.rudderSlider.valueProperty());
+		vm.throttle.bind(this.throttleSlider.valueProperty());
+		vm.aileron.bind(joystick.aileron);
+		vm.elevator.bind(joystick.elevator);
+		
 		vm.csv.bindTo(this.csv);
 		vm.ipSim.bindTo(this.ipSim);
 		vm.portSim.bindTo(this.portSim);
@@ -122,16 +127,10 @@ public class MainWindowController extends Window implements Initializable, Obser
 		vm.portSolver.bindTo(this.portSolver);
 		vm.exitPos.bindTo(this.exitPos);
 		vm.fileName.bind(this.fileName);
-		// controls
-		vm.rudder.bind(this.rudderSlider.valueProperty());
-		vm.throttle.bind(this.throttleSlider.valueProperty());
-		vm.aileron.bind(this.aileron);
-		vm.elevator.bind(this.elevator);
-
+		
 	}
 
 	public void connectClicked() {
-		boolean valid = false;
 		Stage window = new Stage();
 		GridPane grid = new GridPane();
 		TextField ipInput = new TextField();
@@ -305,7 +304,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 				fileName.setValue(selectedFile.getName());
 				vm.interpret();
 			}
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {System.out.println("nf");
 		}
 		logScreen.appendText("Autopilot mode Activated.\n");
 	}
@@ -321,6 +320,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 	public void innerDragged(MouseEvent e) {
 		if (manualFlag) {
 			joystick.innerDragged(e);
+			vm.sendElevatorValues();
+			vm.sendAileronValues();
 		}
 	}
 
@@ -351,13 +352,10 @@ public class MainWindowController extends Window implements Initializable, Obser
 		portSim = new Property<>();
 		ipSolver = new Property<>();
 		portSolver = new Property<>();
-		elevator = new SimpleDoubleProperty();
-		aileron = new SimpleDoubleProperty();
 		isConnectedToSolver = new SimpleBooleanProperty();
 		curAirplaneLocation = new Position(0, 0);
-		// startPos = new Property<>();
 		exitPos = new Property<>();
-		joystick = new JoystickController(innerCircle, outerCircle, rudderSlider, throttleSlider, aileron, elevator);
+		joystick = new JoystickController(innerCircle, outerCircle, rudderSlider, throttleSlider);
 		fileName = new SimpleStringProperty();
 		shortestPath = new SimpleStringProperty();
 		manual.setSelected(true);
@@ -371,11 +369,11 @@ public class MainWindowController extends Window implements Initializable, Obser
 		rudderSlider.setMin(-1);
 		rudderSlider.setMax(1);
 
-		rudderSlider.valueProperty().addListener((ov, old_val, new_val) -> {
+		joystick.rudder.valueProperty().addListener((ov, old_val, new_val) -> {
 			if (manualFlag)
 				vm.sendRudderValues();
 		});
-		throttleSlider.valueProperty().addListener((ov, old_val, new_val) -> {
+		joystick.throttle.valueProperty().addListener((ov, old_val, new_val) -> {
 			if (manualFlag)
 				vm.sendThrottleValues();
 		});

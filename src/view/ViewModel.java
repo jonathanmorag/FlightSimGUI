@@ -114,7 +114,7 @@ public class ViewModel extends Observable implements Observer {
 	
 	public void interpret() {
 		interpreterModel = new Interpreter();
-		interpreterModel.interpret(interpreterModel.lex(fileName.get()));
+		new Thread(()->interpreterModel.interpret(interpreterModel.lex(fileName.get()))).start();
 	}
 	
 	@Override

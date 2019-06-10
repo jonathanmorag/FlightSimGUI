@@ -19,7 +19,8 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <MapDrawer fx:id="mapDrawer" height="400.0" onMouseClicked="#mapClicked" width="400.0">
+                  <MapDrawer fx:id="mapDrawer" height="400.0" onMouseClicked="#mapClicked" width="400.0" 
+                  airplaneImage="./resources/images/Airplane.png" destinationImage="./resources/images/Destination.png" pathImage="./resources/images/Path.png">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>

@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -20,8 +22,40 @@ public class MapDrawer extends Canvas {
 	int toDrawRow;
 	int toDrawCol;
 	List<Position> points = new ArrayList<>();
-	boolean paintFlag;
-
+	StringProperty airplaneImage;
+	StringProperty destinationImage;
+	StringProperty pathImage;
+	
+	public MapDrawer() {
+		airplaneImage = new SimpleStringProperty();
+		destinationImage = new SimpleStringProperty();
+		pathImage = new SimpleStringProperty();
+	}
+	
+	public void setAirplaneImage(String data) {
+		airplaneImage.set(data);
+	}
+	
+	public String getAirplaneImage() {
+		return airplaneImage.get();
+	}
+	
+	public void setDestinationImage(String data) {
+		destinationImage.set(data);
+	}
+	
+	public String getDestinationImage() {
+		return destinationImage.get();
+	}
+	
+	public void setPathImage(String data) {
+		pathImage.set(data);
+	}
+	
+	public String getPathImage() {
+		return pathImage.get();
+	}
+	
 	public void setHeightData(Matrix m) { //
 		heightData = m.getData();
 		redraw();
@@ -54,9 +88,9 @@ public class MapDrawer extends Canvas {
 			Image destination = null;
 			Image path = null;
 			try {
-				airplane = new Image(new FileInputStream("./resources/images/Airplane.png"));
-				destination = new Image(new FileInputStream("./resources/images/Destination.png"));
-				path = new Image(new FileInputStream("./resources/images/Path.png"));
+				airplane = new Image(new FileInputStream(airplaneImage.get()));
+				destination = new Image(new FileInputStream(destinationImage.get()));
+				path = new Image(new FileInputStream(pathImage.get()));
 			} catch (FileNotFoundException e) {
 				System.out.println("file not found");
 			}
