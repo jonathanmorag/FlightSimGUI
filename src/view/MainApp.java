@@ -1,5 +1,5 @@
 package view;
-	
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -14,11 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.fxml.FXMLLoader;
 
-
 public class MainApp extends Application {
-	
-	// AirplaneListenerModel alm;
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -34,7 +31,7 @@ public class MainApp extends Application {
 			FXMLLoader fxl = new FXMLLoader();
 			MainWindowController mwc;
 			BorderPane root = fxl.load(getClass().getResource("MainWindow.fxml").openStream());
-			Scene scene = new Scene(root,800,700);
+			Scene scene = new Scene(root, 800, 700);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			mwc = fxl.getController();
 			mwc.setViewModel(vm);
@@ -42,26 +39,28 @@ public class MainApp extends Application {
 			alm.start();
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			
-			primaryStage.setOnCloseRequest(e-> {
+
+			primaryStage.setOnCloseRequest(e -> {
 				alm.stop();
 			});
-		} catch(Exception e) {e.printStackTrace();}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	public static void main(String[] args) {
 
-		
 		Server s = null;
 		try {
-			s= new MySerialServer(1234);
-			s.start(new MyClientHandler());
+			s = new MySerialServer(1234, new MyClientHandler());
+			s.start();
 			launch(args);
 		} catch (Exception e) {}
 		finally {
+			s.stop();
 			Platform.exit();
 			System.exit(0);
 		}
 	}
-	
+
 }

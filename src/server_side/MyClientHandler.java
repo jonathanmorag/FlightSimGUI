@@ -29,7 +29,7 @@ public class MyClientHandler implements ClientHandler { //Client Handler that ha
 	
 	
 	@Override
-	public void handleClient(InputStream in, OutputStream out) throws Exception {//left: talk to client stream,right:
+	public void handleClient(InputStream in, OutputStream out)  {//left: talk to client stream,right:
 		
 		// Scanner userInput = new Scanner(new BufferedReader(new InputStreamReader(in)));
 		BufferedReader userInput = new BufferedReader(new InputStreamReader(in));

@@ -60,9 +60,9 @@ public class Matrix {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (int[] is : data) {
-			for (int i : is) {
-				sb.append(Integer.toString(i));
+		for (int[] rows : data) {
+			for (int cols : rows) {
+				sb.append(Integer.toString(cols));
 			}
 			sb.append(" ");
 		}

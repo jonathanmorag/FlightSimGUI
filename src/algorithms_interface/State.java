@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class State<T>{
+public class State<T> {
+	
 	T state;
 	double cost;
 	State<T> cameFrom;
@@ -24,7 +25,7 @@ public class State<T>{
 		return cameFrom != null;
 	}
 	
-	public T getData() {
+	public T getState() {
 		return state;
 	}
 
@@ -60,21 +61,16 @@ public class State<T>{
 
     @Override
     public int hashCode() {
-        // return Objects.hash(state);
     	return state.hashCode();
     }
 
     @Override
     public String toString() {
-//    	int myCost = (int)this.cost;
-//        if(hasCameFrom())
-//        	myCost = (int)this.getCameFrom().getCost();
-//        return state.toString() +"=" + myCost;
     	return state.toString();  
     }
     
     public List<State<T>> backtrace() {
-    	ArrayList<State<T>> backtrace = new ArrayList<>(); // Simple ArrayList<State<T>>
+    	ArrayList<State<T>> backtrace = new ArrayList<>();
         State<T> current = this;
         backtrace.add(current);
 

@@ -28,17 +28,17 @@ public class MatrixConverter { // MatrixConvertor // 2Way Convertoer // Parser /
 
 		List<String> solution = new ArrayList<String>();
 		for (int i = 0; i < bt.size() - 1; i++) {
-			if (bt.get(i).getData().row == bt.get(i + 1).getData().row) {
+			if (bt.get(i).getState().row == bt.get(i + 1).getState().row) {
 				// so to moving horizontal
-				if (bt.get(i).getData().col > bt.get(i + 1).getData().col) {
+				if (bt.get(i).getState().col > bt.get(i + 1).getState().col) {
 					solution.add("Left");
 				} else {
 					solution.add("Right");
 				}
 			}
-			if (bt.get(i).getData().col == bt.get(i + 1).getData().col) {
+			if (bt.get(i).getState().col == bt.get(i + 1).getState().col) {
 				// moving is vertical
-				if (bt.get(i).getData().row > bt.get(i + 1).getData().row) {
+				if (bt.get(i).getState().row > bt.get(i + 1).getState().row) {
 					solution.add("Up");
 				} else {
 					solution.add("Down");

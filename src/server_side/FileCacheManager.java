@@ -54,35 +54,5 @@ public class FileCacheManager<Problem, Solution> implements CacheManager<Problem
 		myCache.put(problem.hashCode(), solution);
 	}
 	
-	
-	/*
-	static String typeName = ".txt";
-
-	@Override public boolean isSolutionExists(Problem problem) { // try { //
-	  ObjectInputStream in = new ObjectInputStream(new FileInputStream(problem + //
-	  typeName)); // in.close(); // return true; // } catch (IOException e) {
-	  return false; }
-
-	return Files.exists(Paths.get(problem+typeName));
-
-	}
-
-	@SuppressWarnings("unchecked")
-	  
-	  @Override public Solution getSolution(Problem request) throws Exception {
-	  Solution line; ObjectInputStream in = new ObjectInputStream(new
-	  FileInputStream(request + typeName)); line = (Solution) in.readObject();
-	  in.close(); return line; }
-
-	@Override
-	public void saveSolution(Problem problem, Solution solution) {
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(problem + typeName));
-			out.writeObject(solution);
-			out.flush();
-			out.close();
-		} catch (IOException e) { e.printStackTrace(); }
-	}
-	 */
-	
+		
 }

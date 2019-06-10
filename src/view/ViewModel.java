@@ -26,7 +26,8 @@ public class ViewModel extends Observable implements Observer {
 	ConnectModel connectModel;
 	Interpreter interpreterModel;
 		
-	//properties
+	// Properties
+	
 	public IntegerProperty airplanePosX;
 	public IntegerProperty airplanePosY;
 	
@@ -37,7 +38,9 @@ public class ViewModel extends Observable implements Observer {
 	
 	public Property<Position> startPos;
 	public Property<Position> exitPos;
-	//controls
+	
+	// Controls
+	
 	public DoubleProperty aileron;
 	public DoubleProperty elevator;
 	public DoubleProperty throttle;
@@ -46,7 +49,9 @@ public class ViewModel extends Observable implements Observer {
 	
 	public Property<String> ipSolver;
 	public Property<String> portSolver;
-	//connect button
+	
+	// Connect button
+	
 	public Property<String> ipSim;
 	public Property<String> portSim;
 	public StringProperty shortestPath;
@@ -61,7 +66,7 @@ public class ViewModel extends Observable implements Observer {
 		shortestPath = new SimpleStringProperty();
 		fileName = new SimpleStringProperty();
 		
-		//controls
+		//Controls
 		aileron = new SimpleDoubleProperty();
 		elevator = new SimpleDoubleProperty();
 		rudder = new SimpleDoubleProperty();
@@ -79,7 +84,7 @@ public class ViewModel extends Observable implements Observer {
 		isConnectedToSolver = new SimpleBooleanProperty();
 	}
 	
-	//send values to simulator
+	// Send values to simulator
 	public void sendRudderValues() {
 		connectModel.sendCommandToSimulator("set /controls/flight/rudder ",rudder.get());
 	}

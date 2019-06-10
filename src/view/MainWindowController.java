@@ -11,11 +11,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Scanner;
-
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -78,7 +75,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 	Slider rudderSlider;
 	@FXML
 	Slider throttleSlider;
-	
+
 	public Property<String> ipSim;
 	public Property<String> portSim;
 	public Property<Position> exitPos;
@@ -111,15 +108,15 @@ public class MainWindowController extends Window implements Initializable, Obser
 		this.vm = vm;
 		this.propertyMat.bindTo(vm.propertyMat);
 		this.shortestPath.bind(vm.shortestPath);
-		
+
 		this.isConnectedToSolver.bind(vm.isConnectedToSolver);
-		
+
 		// bind MWC controls to VM controls
 		vm.rudder.bind(this.rudderSlider.valueProperty());
 		vm.throttle.bind(this.throttleSlider.valueProperty());
 		vm.aileron.bind(joystick.aileron);
 		vm.elevator.bind(joystick.elevator);
-		
+
 		vm.csv.bindTo(this.csv);
 		vm.ipSim.bindTo(this.ipSim);
 		vm.portSim.bindTo(this.portSim);
@@ -127,7 +124,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		vm.portSolver.bindTo(this.portSolver);
 		vm.exitPos.bindTo(this.exitPos);
 		vm.fileName.bind(this.fileName);
-		
+
 	}
 
 	public void connectClicked() {
@@ -146,7 +143,6 @@ public class MainWindowController extends Window implements Initializable, Obser
 			b.setCursor(null);
 			b.setEffect(null);
 		});
-//		b.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("FlightGear_Logo.png"))));
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -282,8 +278,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 			manualFlag = true;
 			autoFlag = false;
 		}
-		if (tg.getSelectedToggle().equals(auto)) // Autopilot
-		{
+		if (tg.getSelectedToggle().equals(auto)) { // Autopilot
 			manual.setEffect(null);
 			auto.setEffect(ref);
 			manualFlag = false;
@@ -293,21 +288,20 @@ public class MainWindowController extends Window implements Initializable, Obser
 			fc.setInitialDirectory(new File("./resources"));
 			fc.setSelectedExtensionFilter(new ExtensionFilter("Text Files", "*.txt"));
 			File selectedFile = fc.showOpenDialog(this);
-		try {
-			if(selectedFile!=null) {
-				Scanner sc = new Scanner(selectedFile); // display chosen file in text area
-				while (sc.hasNextLine()) {
-					textArea.appendText(sc.nextLine());
-					textArea.appendText("\n");
+			try {
+				if (selectedFile != null) {
+					Scanner sc = new Scanner(selectedFile); // display chosen file in text area
+					while (sc.hasNextLine()) {
+						textArea.appendText(sc.nextLine());
+						textArea.appendText("\n");
+					}
+					sc.close();
+					fileName.setValue(selectedFile.getName());
+					vm.interpret();
 				}
-				sc.close();
-				fileName.setValue(selectedFile.getName());
-				vm.interpret();
-			}
-		} catch (FileNotFoundException e) {System.out.println("nf");
+			} catch (FileNotFoundException e) {}
+			logScreen.appendText("Autopilot mode Activated.\n");
 		}
-		logScreen.appendText("Autopilot mode Activated.\n");
-	}
 
 	}
 
@@ -332,7 +326,6 @@ public class MainWindowController extends Window implements Initializable, Obser
 	}
 
 	public void mapClicked(MouseEvent e) {
-		// System.out.println("X: " + (e.getSceneX()-5) + "Y: " + (e.getSceneY()-60));
 		if (mapDrawer.heightData != null) {
 			exitPos.set(mapDrawer.setRoute((e.getSceneX() - 5), (e.getSceneY() - 60)));
 			vm.setExitPosition();

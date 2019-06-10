@@ -73,7 +73,6 @@ public class MapDrawer extends Canvas {
 		toDrawRow = (int) ((clickedY) / cellSize);
 		redraw(); // Drawing X
 		return new Position(toDrawRow, toDrawCol);
-//			System.out.println(dest);
 	}
 
 	public void redraw() {
@@ -100,8 +99,6 @@ public class MapDrawer extends Canvas {
 				for (int j = 0; j < heightData[0].length; j++) {
 					gc.setFill(setColor(heightData[i][j]));
 					gc.fillRect(j * w, i * h, w, h);
-//					gc.setFill(Color.DARKCYAN);							//draw values
-//					gc.fillText(" "+(heightData[i][j]), (j) * w, (i) * h);
 					if (i == toDrawRow && j == toDrawCol) {
 						gc.drawImage(destination, j * w, i * h, w, h);  // draw destination X
 					}
@@ -155,11 +152,9 @@ public class MapDrawer extends Canvas {
 	}
 
 	public void paintPath(String shortestPath, Position current) {
-		// System.out.println(shortestPath);
 		points.clear();
 		String[] steps = shortestPath.split(",");
 		Position prev = current;
-		// points = new ArrayList<>();
 		for (String s : steps) {
 			if (s.equals("Right")) {
 				prev = new Position(prev.row + 1, prev.col);
@@ -178,10 +173,7 @@ public class MapDrawer extends Canvas {
 				prev = new Position(prev.row, prev.col - 1);
 				points.add(prev);
 			}
-			// (0,1) -> (0,2) -> (1,2) -> (2,2)
 		}
-//		points.remove(points.size() - 1);
-//		paintFlag = true;
 		redraw();
 
 	}
