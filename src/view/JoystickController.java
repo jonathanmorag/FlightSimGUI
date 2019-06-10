@@ -31,8 +31,6 @@ public class JoystickController {
 	}
 
 	public void innerPressed(MouseEvent e) {
-//			innerCircle.setCenterX(0);
-//			innerCircle.setCenterY(0);
 		orgSceneX = e.getSceneX();
 		orgSceneY = e.getSceneY();
 		innerCircle.toFront();

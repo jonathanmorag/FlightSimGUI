@@ -1,16 +1,24 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+
+import com.sun.glass.ui.Application;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,6 +30,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
@@ -40,8 +49,11 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.effect.Reflection;
 import javafx.scene.effect.SepiaTone;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import matrix.Matrix;
 import matrix.Position;
@@ -68,6 +80,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 	@FXML
 	ToggleGroup tg;
 	JoystickController joystick;
+	@FXML
+	Button git;
 
 	// --------------simulator-----------------
 	// controls
@@ -258,6 +272,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 			Stage s = (Stage) b.getScene().getWindow();
 			s.close();
 		});
+		b.setTranslateY(35);
 		root.getChildren().addAll(t, b);
 		b.setPadding(new Insets(12));
 		t.setTranslateY(-15);
@@ -336,8 +351,37 @@ public class MainWindowController extends Window implements Initializable, Obser
 		}
 	}
 
+	public void setGitButton() {
+		git.setShape(new Circle(0.5));
+		ImageView iv;
+		try {
+			iv = new ImageView(new Image(new FileInputStream("./resources/images/git.png")));
+			iv.setFitHeight(50);
+			iv.setFitWidth(50);
+			git.setPadding(new Insets(3));
+			git.setGraphic(iv);
+			git.setStyle("-fx-background-color: DarkSlateGray");
+			git.setEffect(new Glow());
+			git.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
+				git.setCursor(Cursor.HAND);
+				git.setEffect(new DropShadow());
+			});
+			git.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
+				git.setCursor(null);
+				git.setEffect(null);
+			});
+		} catch (FileNotFoundException e2) {}
+		final Hyperlink link = new Hyperlink("https://github.com/jonathanmorag/FlightSimGUI");
+		git.setOnMouseClicked(e -> {
+				try {
+					Desktop.getDesktop().browse(new URI(link.getText()));
+				} catch (IOException | URISyntaxException e1) {}
+		});
+	}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		setGitButton();
 		logScreen.setEditable(false);
 		propertyMat = new Property<>();
 		csv = new Property<>();
