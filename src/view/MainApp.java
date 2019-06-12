@@ -31,7 +31,7 @@ public class MainApp extends Application {
 			FXMLLoader fxl = new FXMLLoader();
 			MainWindowController mwc;
 			BorderPane root = fxl.load(getClass().getResource("MainWindow.fxml").openStream());
-			Scene scene = new Scene(root, 800, 700);
+			Scene scene = new Scene(root, 800, 695);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			mwc = fxl.getController();
 			mwc.setViewModel(vm);
