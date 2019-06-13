@@ -25,37 +25,37 @@ public class MapDrawer extends Canvas {
 	StringProperty airplaneImage;
 	StringProperty destinationImage;
 	StringProperty pathImage;
-	
+
 	public MapDrawer() {
 		airplaneImage = new SimpleStringProperty();
 		destinationImage = new SimpleStringProperty();
 		pathImage = new SimpleStringProperty();
 	}
-	
+
 	public void setAirplaneImage(String data) {
 		airplaneImage.set(data);
 	}
-	
+
 	public String getAirplaneImage() {
 		return airplaneImage.get();
 	}
-	
+
 	public void setDestinationImage(String data) {
 		destinationImage.set(data);
 	}
-	
+
 	public String getDestinationImage() {
 		return destinationImage.get();
 	}
-	
+
 	public void setPathImage(String data) {
 		pathImage.set(data);
 	}
-	
+
 	public String getPathImage() {
 		return pathImage.get();
 	}
-	
+
 	public void setHeightData(Matrix m) { //
 		heightData = m.getData();
 		redraw();
@@ -100,14 +100,14 @@ public class MapDrawer extends Canvas {
 					gc.setFill(setColor(heightData[i][j]));
 					gc.fillRect(j * w, i * h, w, h);
 					if (i == toDrawRow && j == toDrawCol) {
-						gc.drawImage(destination, j * w, i * h, w, h);  // draw destination X
+						gc.drawImage(destination, j * w, i * h, w, h); // draw destination X
 					}
 				}
 			}
-			for (Position p : points) { 								// draw path
+			for (Position p : points) { // draw path
 				gc.drawImage(path, p.row * w, p.col * h, w, h);
 			}
-			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h);   // draw airplane
+			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h); // draw airplane
 		}
 
 	}

@@ -49,7 +49,7 @@ public class MathParser {
 		
 		Interpreter.symTable.put(expression[0], val);
 		String data = "set " + Interpreter.varToPath.get(expression[0]) + " "+ val;
-		System.out.println("sending: "+ data);
+//		System.out.println("sending: "+ data);
 		ConnectCommand.out.flush();
 		ConnectCommand.out.println(data);
 		ConnectCommand.out.flush();

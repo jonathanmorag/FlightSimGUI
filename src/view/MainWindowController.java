@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.Color;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,8 +15,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Scanner;
-
-import com.sun.glass.ui.Application;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -314,7 +311,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 					fileName.setValue(selectedFile.getName());
 					vm.interpret();
 				}
-			} catch (FileNotFoundException e) {}
+			} catch (FileNotFoundException e) {
+			}
 			logScreen.appendText("Autopilot mode Activated.\n");
 		}
 
@@ -370,15 +368,17 @@ public class MainWindowController extends Window implements Initializable, Obser
 				git.setCursor(null);
 				git.setEffect(null);
 			});
-		} catch (FileNotFoundException e2) {}
+		} catch (FileNotFoundException e2) {
+		}
 		final Hyperlink link = new Hyperlink("https://github.com/jonathanmorag/FlightSimGUI");
 		git.setOnMouseClicked(e -> {
-				try {
-					Desktop.getDesktop().browse(new URI(link.getText()));
-				} catch (IOException | URISyntaxException e1) {}
+			try {
+				Desktop.getDesktop().browse(new URI(link.getText()));
+			} catch (IOException | URISyntaxException e1) {
+			}
 		});
 	}
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setGitButton();

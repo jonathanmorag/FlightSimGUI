@@ -55,7 +55,11 @@ public class MyClientHandler implements ClientHandler { //Client Handler that ha
 	
 			outToUser.println(answer);
 			outToUser.flush();
-		} catch (IOException e1) { e1.printStackTrace(); }
+		} catch (IOException e1) { try {
+			out.close();
+			in.close();
+			return;
+		} catch (IOException e) {} }
 	}
 
 	

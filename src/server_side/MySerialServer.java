@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Scanner;
 
 
 public class MySerialServer implements Server {
@@ -50,14 +51,29 @@ public class MySerialServer implements Server {
 			try {
 				Socket aClient = server.accept(); // Client connected successfully
 				try {
-					while(!stop)
+					while(aClient.isConnected()) {
 						ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
+					}
+					stop=true;
 					aClient.close();
-				} catch (IOException e) {}
+				} catch (IOException e) {server.close();}
 			} catch (SocketTimeoutException e) {}
 
 		}
 		server.close();
 	}
+	public static void main(String[] args) {
 
+		Server s = null;
+		
+		try {
+			s = new MySerialServer(1234, new MyClientHandler());
+			s.start();
+			Thread.sleep(100);
+			System.out.println("Press any key to close the Server");
+			Scanner scanner = new Scanner(System.in);
+			scanner.nextLine();
+			scanner.close();
+		} catch (Exception e) {}
+	}
 }
