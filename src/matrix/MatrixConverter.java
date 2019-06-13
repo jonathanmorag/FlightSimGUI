@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import algorithms_interface.State;
 
-public class MatrixConverter { // MatrixConvertor // 2Way Convertoer // Parser // BI Directional Parser
+public class MatrixConverter { 									// Parser // BI Directional Parser
+	
 	public static MatrixSearchable problemToMatrixSearchable(List<String> problem) {
 		int numOfRows = problem.size() - 3;
 		int numofCols = problem.get(0).split(",").length;
 		int[][] data = new int[numOfRows][numofCols];
 
 		for (int i = 0; i < numOfRows; i++) {
-			// String[] row = problem.get(i).split(",");
 			for (int j = 0; j < numofCols; j++) {
 				data[i][j] = Integer.valueOf(problem.get(i).split(",")[j]);
 			}

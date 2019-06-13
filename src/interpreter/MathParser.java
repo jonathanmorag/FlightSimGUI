@@ -1,5 +1,8 @@
 package interpreter;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
+import java.util.Locale;
 
 import shuntingYard.Q3;
 
@@ -12,19 +15,21 @@ public class MathParser {
 		String[] newExp = Arrays.copyOfRange(expression, 2, expression.length); // (h0 - heading)/20
 		StringBuilder sb = new StringBuilder();
 		String var = "";
+		DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+		df.setMaximumFractionDigits(340);
 		for (int i = 0; i < newExp.length; i++) {
 			char firstChar = newExp[i].charAt(0);
 			if (firstChar == '(') {
 				sb.append("(");
 				var = newExp[i].substring(1, newExp[i].length());
-				sb.append(Interpreter.symTable.get(var)); // "(h0-
+				sb.append(df.format(Interpreter.symTable.get(var))); // "(h0-
 				continue;
 			} else if (newExp[i].indexOf(")") > 0
 					&& Interpreter.symTable.containsKey(newExp[i].substring(0, newExp[i].indexOf(")")))) {
-				sb.append(Interpreter.symTable.get(newExp[i].substring(0, newExp[i].indexOf(')'))));
+				sb.append(df.format(Interpreter.symTable.get(newExp[i].substring(0, newExp[i].indexOf(')')))));
 				sb.append(newExp[i].substring(newExp[i].indexOf(")"), newExp[i].length()));
 			} else if (Interpreter.symTable.containsKey(newExp[i])) { // if encountered known var from sym Table
-				sb.append(Interpreter.symTable.get(newExp[i]));
+				sb.append(df.format(Interpreter.symTable.get(newExp[i])));
 			} else // assuming its an operator
 				sb.append(newExp[i]);
 		}

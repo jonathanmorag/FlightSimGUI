@@ -11,7 +11,7 @@ import java.util.List;
 
 import models.MatrixModel;
 
-public class MyClientHandler implements ClientHandler { //Client Handler that handles Strings inversions only
+public class MyClientHandler implements ClientHandler { 		//Client Handler that handles Matrix solving problems only
 	
 	Solver<List<String>,String> solver;
 	CacheManager<List<String>, String> cm;
@@ -21,22 +21,12 @@ public class MyClientHandler implements ClientHandler { //Client Handler that ha
 		cm = new FileCacheManager<>();
 	}
 	
-//	public MyClientHandler(Solver<List<String>,List<String> solver, CacheManager<String,String> cm) {
-//		this.solver = solver;
-//		this.cm = cm;
-//	}
-
-	
 	
 	@Override
-	public void handleClient(InputStream in, OutputStream out)  {//left: talk to client stream,right:
+	public void handleClient(InputStream in, OutputStream out)  {
 		
-		// Scanner userInput = new Scanner(new BufferedReader(new InputStreamReader(in)));
 		BufferedReader userInput = new BufferedReader(new InputStreamReader(in));
 		PrintWriter outToUser = new PrintWriter(out);
-		//System.out.println("Handling Client . . . " );
-		//System.out.flush();
-
 		
 		String line = "";
 		List<String> input = new ArrayList<>();
@@ -47,7 +37,7 @@ public class MyClientHandler implements ClientHandler { //Client Handler that ha
 			input.add(userInput.readLine());
 			input.add(userInput.readLine());
 			
-			String answer;
+			String answer = null;
 			if((answer = cm.getSolution(input)) == null) {
 				cm.saveSolution(input, solver.solve(input));
 				answer = cm.getSolution(input);
@@ -61,6 +51,5 @@ public class MyClientHandler implements ClientHandler { //Client Handler that ha
 			return;
 		} catch (IOException e) {} }
 	}
-
 	
 }

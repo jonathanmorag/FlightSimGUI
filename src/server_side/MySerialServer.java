@@ -70,7 +70,7 @@ public class MySerialServer implements Server {
 			s = new MySerialServer(1234, new MyClientHandler());
 			s.start();
 			Thread.sleep(100);
-			System.out.println("Press any key to close the Server");
+			System.out.println("Press any key to close the server");
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
 			scanner.close();

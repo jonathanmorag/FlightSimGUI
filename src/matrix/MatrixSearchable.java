@@ -17,7 +17,8 @@ public class MatrixSearchable implements Searchable<Position> {
 
 	@Override
 	public State<Position> getInitialState() {
-		return new State<Position>(matrix.getEntrance(), matrix.data[matrix.getEntrance().row][matrix.getEntrance().col], null);
+		return new State<Position>(matrix.getEntrance(),
+				matrix.data[matrix.getEntrance().row][matrix.getEntrance().col], null);
 	}
    
 	@Override

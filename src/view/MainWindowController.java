@@ -80,8 +80,8 @@ public class MainWindowController extends Window implements Initializable, Obser
 	@FXML
 	Button git;
 
-	// --------------simulator-----------------
-	// controls
+	// -------------- Simulator -----------------
+	// Controls
 	@FXML
 	Slider rudderSlider;
 	@FXML
@@ -92,13 +92,13 @@ public class MainWindowController extends Window implements Initializable, Obser
 	public Property<Position> exitPos;
 	// ----------------------------------------
 
-	// ----------------solver------------------
+	// ---------------- Solver ------------------
 	public Property<String> ipSolver;
 	public Property<String> portSolver;
 	public StringProperty shortestPath;
 	// ----------------------------------------
 
-	// -------------properties-----------------
+	// ------------- Properties -----------------
 	public Property<Matrix> propertyMat;
 	public Property<String[]> csv;
 	public StringProperty fileName;
@@ -114,7 +114,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 	int airplanePosX;
 	int airplanePosY;
 
-	// define bindings
+	// Define bindings
 	public void setViewModel(ViewModel vm) {
 		this.vm = vm;
 		this.propertyMat.bindTo(vm.propertyMat);
@@ -122,7 +122,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 
 		this.isConnectedToSolver.bind(vm.isConnectedToSolver);
 
-		// bind MWC controls to VM controls
+		// Bind MWC controls to VM controls
 		vm.rudder.bind(this.rudderSlider.valueProperty());
 		vm.throttle.bind(this.throttleSlider.valueProperty());
 		vm.aileron.bind(joystick.aileron);
@@ -201,8 +201,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 				csv.set(reader.readLine().split(","));
 				vm.buildMatrix();
 				logScreen.appendText("Map loaded succesfully.\n");
-			} catch (IOException e) {
-			}
+			} catch (IOException e) {}
 		}
 	}
 
@@ -290,7 +289,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 			manualFlag = true;
 			autoFlag = false;
 		}
-		if (tg.getSelectedToggle().equals(auto)) { // Autopilot
+		if (tg.getSelectedToggle().equals(auto)) { 		// Autopilot
 			manual.setEffect(null);
 			auto.setEffect(ref);
 			manualFlag = false;
@@ -302,7 +301,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 			File selectedFile = fc.showOpenDialog(this);
 			try {
 				if (selectedFile != null) {
-					Scanner sc = new Scanner(selectedFile); // display chosen file in text area
+					Scanner sc = new Scanner(selectedFile); // Display chosen file in text area
 					while (sc.hasNextLine()) {
 						textArea.appendText(sc.nextLine());
 						textArea.appendText("\n");
@@ -311,23 +310,21 @@ public class MainWindowController extends Window implements Initializable, Obser
 					fileName.setValue(selectedFile.getName());
 					vm.interpret();
 				}
-			} catch (FileNotFoundException e) {
-			}
+			} catch (FileNotFoundException e) {}
 			logScreen.appendText("Autopilot mode Activated.\n");
 		}
 
 	}
 
 	public void innerPressed(MouseEvent e) {
-		if (manualFlag) {
+		if (manualFlag)
 			joystick.innerPressed(e);
-		}
 	}
 
-	public void innerDragged(MouseEvent e) {
+	public void innerDragged(MouseEvent e) {        
 		if (manualFlag) {
 			joystick.innerDragged(e);
-			vm.sendElevatorValues();
+			vm.sendElevatorValues();               // Sending orders to simulator
 			vm.sendAileronValues();
 		}
 	}
@@ -338,7 +335,7 @@ public class MainWindowController extends Window implements Initializable, Obser
 		vm.sendAileronValues();
 	}
 
-	public void mapClicked(MouseEvent e) {
+	public void mapClicked(MouseEvent e) {									// Setting destination event handler
 		if (mapDrawer.heightData != null) {
 			exitPos.set(mapDrawer.setRoute((e.getSceneX() - 5), (e.getSceneY() - 60)));
 			vm.setExitPosition();
@@ -368,14 +365,12 @@ public class MainWindowController extends Window implements Initializable, Obser
 				git.setCursor(null);
 				git.setEffect(null);
 			});
-		} catch (FileNotFoundException e2) {
-		}
+		} catch (FileNotFoundException e2) {}
 		final Hyperlink link = new Hyperlink("https://github.com/jonathanmorag/FlightSimGUI");
 		git.setOnMouseClicked(e -> {
 			try {
 				Desktop.getDesktop().browse(new URI(link.getText()));
-			} catch (IOException | URISyntaxException e1) {
-			}
+			} catch (IOException | URISyntaxException e1) {}
 		});
 	}
 
@@ -406,11 +401,11 @@ public class MainWindowController extends Window implements Initializable, Obser
 		rudderSlider.setMin(-1);
 		rudderSlider.setMax(1);
 
-		joystick.rudder.valueProperty().addListener((ov, old_val, new_val) -> {
+		joystick.rudder.valueProperty().addListener((ov, old_val, new_val) -> {         // Slider data binding
 			if (manualFlag)
 				vm.sendRudderValues();
 		});
-		joystick.throttle.valueProperty().addListener((ov, old_val, new_val) -> {
+		joystick.throttle.valueProperty().addListener((ov, old_val, new_val) -> {		// Slider data binding
 			if (manualFlag)
 				vm.sendThrottleValues();
 		});

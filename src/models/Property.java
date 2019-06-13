@@ -3,11 +3,8 @@ package models;
 import java.util.Observable;
 import java.util.Observer;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
-public class Property<V> extends Observable implements Observer, ObservableValue<V> {
+public class Property<V> extends Observable implements Observer {
 	
 	V v;
 	
@@ -29,49 +26,25 @@ public class Property<V> extends Observable implements Observer, ObservableValue
 	public void update(Observable o, Object arg) {
 		@SuppressWarnings("unchecked")
 		Property<V> other = (Property<V>)o;
-		if(other.v != v || v == null) {
-			set(other.v);
-		}
+		if(other.v != v || v == null)
+			this.set(other.v);
 	}
 
-	@Override
-	public void addListener(InvalidationListener listener) {
-	}
 
-	@Override
-	public void removeListener(InvalidationListener listener) {
-	}
-
-	@Override
-	public void addListener(ChangeListener<? super V> listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void removeListener(ChangeListener<? super V> listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public V getValue() {
-		return v;
-	}
 	
-//	public static void main(String[] args) {
-//		Property<Integer> p1 = new Property<>();
-//		Property<Integer> p2 = new Property<>();
-//		p1.bindTo(p2);
-//		p2.bindTo(p1);
-//		p1.set(5);
+	public static void main(String[] args) {
+		Property<Integer> p1 = new Property<>();
+		Property<Integer> p2 = new Property<>();
+		p1.bindTo(p2);
+		p2.bindTo(p1);
+		p1.set(5);
 //		p2.set(5);
 //		System.out.println(p2.get()); // should be 5
 //		p1.set(3);
-//		System.out.println(p2.get()); 
-//		p2.set(7);
-//		System.out.println(p1.get());
-//	}
+		System.out.println(p2.get()); 
+		// p2.set(7);
+		// System.out.println(p1.get());
+	}
 	
 
 }

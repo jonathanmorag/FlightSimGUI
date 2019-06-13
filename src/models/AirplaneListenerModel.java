@@ -10,11 +10,12 @@ import java.util.Observable;
 
 import matrix.Position;
 import matrix.PositionConverter;
+import server_side.Server;
 
-public class AirplaneListenerModel extends Observable {
+public class AirplaneListenerModel extends Observable implements Server {
 
-	volatile boolean stop;
 	int port;
+	volatile boolean stop;
 	volatile Position airplanePosition;
 	public double startCooX;
 	public double startCooY;
@@ -34,18 +35,17 @@ public class AirplaneListenerModel extends Observable {
 	public void setStartCooY(double startCooY) {
 		this.startCooY = startCooY;
 	}
-
-	public void start() throws Exception {
+	
+	@Override
+	public void start() {
 		new Thread(() -> {
 			try {
-//				System.out.println("Server is open and waiting for clients . . . ");
 				runServer();
-			} catch (Exception e) {
-				stop = true;
-			}
+			} catch (Exception e) { stop = true; }
 		}).start();
 	}
-
+	
+	@Override
 	public void stop() {
 		this.stop = true;
 	}
@@ -72,9 +72,7 @@ public class AirplaneListenerModel extends Observable {
 				finally {
 					server.close();
 				}
-			} catch (SocketTimeoutException e) {
-			}
-
+			} catch (SocketTimeoutException e) { }
 		}
 	}
 

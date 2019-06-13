@@ -17,19 +17,16 @@ import matrix.Position;
 public class MapDrawer extends Canvas {
 
 	int[][] heightData;
-	int aCol;
-	int aRow;
-	int toDrawRow;
-	int toDrawCol;
-	List<Position> points = new ArrayList<>();
-	StringProperty airplaneImage;
-	StringProperty destinationImage;
-	StringProperty pathImage;
+	int aCol, aRow;
+	int toDrawRow, toDrawCol;
+	List<Position> points;
+	StringProperty airplaneImage, destinationImage, pathImage;
 
 	public MapDrawer() {
 		airplaneImage = new SimpleStringProperty();
 		destinationImage = new SimpleStringProperty();
 		pathImage = new SimpleStringProperty();
+		points = new ArrayList<>();
 	}
 
 	public void setAirplaneImage(String data) {
@@ -67,11 +64,11 @@ public class MapDrawer extends Canvas {
 		redraw();
 	}
 
-	public Position setRoute(double clickedX, double clickedY) {
+	public Position setRoute(double clickedX, double clickedY) {                    // Setting destination
 		double cellSize = (double) ((400.0) / (double) (heightData.length));
 		toDrawCol = (int) ((clickedX) / cellSize);
 		toDrawRow = (int) ((clickedY) / cellSize);
-		redraw(); // Drawing X
+		redraw();
 		return new Position(toDrawRow, toDrawCol);
 	}
 
@@ -100,14 +97,14 @@ public class MapDrawer extends Canvas {
 					gc.setFill(setColor(heightData[i][j]));
 					gc.fillRect(j * w, i * h, w, h);
 					if (i == toDrawRow && j == toDrawCol) {
-						gc.drawImage(destination, j * w, i * h, w, h); // draw destination X
+						gc.drawImage(destination, j * w, i * h, w, h); // Draw destination
 					}
 				}
 			}
 			for (Position p : points) { // draw path
 				gc.drawImage(path, p.row * w, p.col * h, w, h);
 			}
-			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h); // draw airplane
+			gc.drawImage(airplane, aCol * w, aRow * h, 2 * w, 2 * h); // Draw airplane
 		}
 
 	}
@@ -115,7 +112,7 @@ public class MapDrawer extends Canvas {
 	private Color setColor(int value) {
 		switch (value) {
 		case 0:
-			return Color.rgb(204, 0, 0); // red
+			return Color.rgb(204, 0, 0); 		// Red
 		case 1:
 			return Color.rgb(255, 0, 0);
 		case 2:
@@ -129,7 +126,7 @@ public class MapDrawer extends Canvas {
 		case 6:
 			return Color.rgb(255, 255, 102);
 		case 7:
-			return Color.rgb(255, 255, 0); // yellow
+			return Color.rgb(255, 255, 0); 		// Yellow
 		case 8:
 			return Color.rgb(255, 255, 102);
 		case 9:
@@ -145,10 +142,11 @@ public class MapDrawer extends Canvas {
 		case 14:
 			return Color.rgb(0, 255, 0);
 		case 15:
-			return Color.rgb(0, 204, 0); // green
+			return Color.rgb(0, 204, 0); 		// Green
 		}
 
 		return null;
+		
 	}
 
 	public void paintPath(String shortestPath, Position current) {

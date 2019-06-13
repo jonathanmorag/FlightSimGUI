@@ -15,6 +15,7 @@ public class Matrix {
 		this.entrance = entrance;
 		this.exit = exit;
 	}
+	
 	public void setEntrance(Position entrance) {
 		this.entrance = entrance;
 	}
@@ -40,7 +41,7 @@ public class Matrix {
 
 	// returns a list of possible positions
 
-	List<Position> getPossibleMoves(Position p) {
+	public List<Position> getPossibleMoves(Position p) {
 		int i = p.row, j = p.col;
 		if (isInBound(i, j)) {
 			List<Position> neighbors = new ArrayList<>();
@@ -61,9 +62,8 @@ public class Matrix {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (int[] rows : data) {
-			for (int cols : rows) {
+			for (int cols : rows) 
 				sb.append(Integer.toString(cols));
-			}
 			sb.append(" ");
 		}
 		return sb.toString();

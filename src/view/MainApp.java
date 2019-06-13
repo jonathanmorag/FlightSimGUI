@@ -21,7 +21,7 @@ public class MainApp extends Application {
 			AirplaneListenerModel alm = new AirplaneListenerModel(5500);
 			MatrixModel matModel = new MatrixModel();
 			ConnectModel conModel = new ConnectModel();
-			ViewModel vm = new ViewModel(matModel, alm, conModel);
+			ViewModel vm = new ViewModel(matModel, alm, conModel);         // ViewModel contains three models
 			alm.addObserver(vm);
 			matModel.addObserver(vm);
 			conModel.addObserver(vm);
@@ -47,7 +47,7 @@ public class MainApp extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
-		Platform.exit();
+		Platform.exit();                // safe exit
 		System.exit(0);
 	}
 

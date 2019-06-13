@@ -23,20 +23,20 @@ public class JoystickController {
 		orgSceneX = orgSceneY = 0;
 	}
 
-	public void innerReleased(MouseEvent e) {
+	public void innerReleased(MouseEvent e) {              	// When inner circle is released event handler 
 		innerCircle.setCenterX(0);
 		innerCircle.setCenterY(0);
 		elevator.set(0);
 		aileron.set(0);
 	}
 
-	public void innerPressed(MouseEvent e) {
+	public void innerPressed(MouseEvent e) {				// When inner circle is pressed event handler 
 		orgSceneX = e.getSceneX();
 		orgSceneY = e.getSceneY();
 		innerCircle.toFront();
 	}
 
-	public void innerDragged(MouseEvent e) {
+	public void innerDragged(MouseEvent e) {				// When inner circle is dragged event handler 
 
 		double maxRange = outerCircle.getRadius() - innerCircle.getRadius() + 15;
 		innerCircle.setCenterX(0);
