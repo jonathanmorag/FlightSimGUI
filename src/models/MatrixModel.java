@@ -15,7 +15,7 @@ import algorithms_interface.BestFirstSearch;
 import algorithms_interface.Searcher;
 import algorithms_interface.State;
 
-public class MatrixModel extends Observable implements Solver<List<String>, String> {
+public class MatrixModel extends Observable implements Solver<MatrixSearchable, String> {
 
 	Matrix resultMatrix;
 	double startCoordinateX;
@@ -111,10 +111,10 @@ public class MatrixModel extends Observable implements Solver<List<String>, Stri
 	}
 
 	@Override
-	public String solve(List<String> problem) {
+	public String solve(MatrixSearchable ms) {
 
 		Searcher<Position> BestFSsearcher = new BestFirstSearch<>();
-		List<State<Position>> bt = BestFSsearcher.search(MatrixConverter.problemToMatrixSearchable(problem));
+		List<State<Position>> bt = BestFSsearcher.search(ms);
 
 		List<String> sol = MatrixConverter.backtraceToSolution(bt);
 		StringBuilder sb = new StringBuilder();

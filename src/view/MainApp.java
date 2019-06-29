@@ -28,7 +28,7 @@ public class MainApp extends Application {
 			FXMLLoader fxl = new FXMLLoader();
 			MainWindowController mwc;
 			BorderPane root = fxl.load(getClass().getResource("MainWindow.fxml").openStream());
-			Scene scene = new Scene(root, 800, 695);
+			Scene scene = new Scene(root, 770, 690);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			mwc = fxl.getController();
 			mwc.setViewModel(vm);
@@ -46,9 +46,12 @@ public class MainApp extends Application {
 	}
 
 	public static void main(String[] args) {
+		try {
 		launch(args);
-		Platform.exit();                // safe exit
-		System.exit(0);
+		} finally {
+			Platform.exit();        // safe exit           
+			System.exit(0);
+		}
 	}
 
 }

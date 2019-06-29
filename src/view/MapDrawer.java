@@ -94,7 +94,7 @@ public class MapDrawer extends Canvas {
 
 			for (int i = 0; i < heightData.length; i++) {
 				for (int j = 0; j < heightData[0].length; j++) {
-					gc.setFill(setColor(heightData[i][j]));
+					gc.setFill(getColor(heightData[i][j]));
 					gc.fillRect(j * w, i * h, w, h);
 					if (i == toDrawRow && j == toDrawCol) {
 						gc.drawImage(destination, j * w, i * h, w, h); // Draw destination
@@ -109,7 +109,7 @@ public class MapDrawer extends Canvas {
 
 	}
 
-	private Color setColor(int value) {
+	private Color getColor(int value) {
 		switch (value) {
 		case 0:
 			return Color.rgb(204, 0, 0); 		// Red

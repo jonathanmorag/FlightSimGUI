@@ -74,6 +74,7 @@ public class MySerialServer implements Server {
 			Scanner scanner = new Scanner(System.in);
 			scanner.nextLine();
 			scanner.close();
+			s.stop();
 		} catch (Exception e) {}
 	}
 }

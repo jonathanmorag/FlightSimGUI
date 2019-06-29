@@ -9,47 +9,48 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import matrix.MatrixConverter;
+import matrix.MatrixSearchable;
 import models.MatrixModel;
 
-public class MyClientHandler implements ClientHandler { 		//Client Handler that handles Matrix solving problems only
-	
-	Solver<List<String>,String> solver;
-	CacheManager<List<String>, String> cm;
-	
+public class MyClientHandler implements ClientHandler { // Client Handler that handles Matrix solving problems only
+
+	Solver<MatrixSearchable, String> solver;
+	CacheManager<MatrixSearchable, String> cm;
+
 	public MyClientHandler() {
 		solver = new MatrixModel();
 		cm = new FileCacheManager<>();
 	}
-	
-	
+
 	@Override
-	public void handleClient(InputStream in, OutputStream out)  {
-		
+	public void handleClient(InputStream in, OutputStream out) {
+
 		BufferedReader userInput = new BufferedReader(new InputStreamReader(in));
 		PrintWriter outToUser = new PrintWriter(out);
-		
+
 		String line = "";
 		List<String> input = new ArrayList<>();
 		try {
 			while (!(line = userInput.readLine()).equals("end"))
-				input.add(line);	
+				input.add(line);
 			input.add("end");
 			input.add(userInput.readLine());
 			input.add(userInput.readLine());
-			
+
+			MatrixSearchable ms = MatrixConverter.problemToMatrixSearchable(input);
+
 			String answer = null;
-			if((answer = cm.getSolution(input)) == null) {
-				cm.saveSolution(input, solver.solve(input));
-				answer = cm.getSolution(input);
+			if ((answer = cm.getSolution(ms)) == null) {
+				answer = solver.solve(ms);
+				cm.saveSolution(ms, answer);
 			}
-	
+
 			outToUser.println(answer);
 			outToUser.flush();
-		} catch (IOException e1) { try {
-			out.close();
-			in.close();
-			return;
-		} catch (IOException e) {} }
+		} catch (IOException e1) {
+			
+		}
 	}
-	
+
 }

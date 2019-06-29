@@ -74,9 +74,11 @@ public class MainWindowController extends Window implements Initializable, Obser
 	Circle outerCircle;
 	@FXML
 	Circle innerCircle;
-	@FXML
+	
 	ToggleGroup tg;
+	
 	JoystickController joystick;
+	
 	@FXML
 	Button git;
 

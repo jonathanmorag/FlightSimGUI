@@ -1,5 +1,6 @@
 package algorithms_interface;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -9,7 +10,7 @@ public class BestFirstSearch<T> extends CommonSearcher<T> {
 	@Override
 	public List<State<T>> search(Searchable<T> searchable) {
 
-		PriorityQueue<State<T>> openList = new PriorityQueue<>((s1, s2) -> Double.compare(s1.getCost(), s2.getCost()));
+		PriorityQueue<State<T>> openList = new PriorityQueue<>(Comparator.comparingDouble(State::getCost));
 
 		openList.add(searchable.getInitialState());
 
@@ -21,10 +22,23 @@ public class BestFirstSearch<T> extends CommonSearcher<T> {
 			}
 			List<State<T>> possibleStates = searchable.getAllPossibleStates(currentState);
 			
-			for(State<T> state : possibleStates) {
-				if (!openList.contains(state))
-					openList.add(state);
-			}
+			possibleStates.forEach(s -> {
+				if(!closedList.contains(s) && !openList.contains(s))
+					openList.add(s);
+				else {
+					State<T> temp = null;
+					for(State<T> st : openList) {
+						if(s.equals(st) && s.cost < st.cost) {
+							temp = st;
+							break;
+						}
+					}
+					if(temp != null) {
+						openList.remove(temp);
+						openList.add(s);
+					}
+				}
+			});
 
 		}
 		return null;
